@@ -1,6 +1,10 @@
 ---
-title: "aleromero.github.io"
+title: "Alejandro Romero González"
+about: 
+  template: solana
 ---
+
+Hola Mundo.
 
 This is a Quarto website.
 
