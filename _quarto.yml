@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Alejandro Romero González"
+  title: "ARG"
   navbar:
     left:
       - href: index.qmd
@@ -12,7 +12,7 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: united
     css: styles.css
     toc: true
 
