@@ -4,24 +4,24 @@ title: ""
 
 ```{=html}
 <style>
-    html, body {
-        height: 100%;
+    body {
         margin: 0;
-        overflow: hidden;
+        overflow: hidden; /* Prevenir el desplazamiento */
     }
 
     .responsive-iframe-container {
         position: fixed;
-        top: 0;
+        top: 59px;  /* Altura de menú */
         left: 0;
         right: 0;
         bottom: 0;
+        overflow: hidden;
     }
 
     .responsive-iframe-container iframe {
-        border: none;
         width: 100%;
         height: 100%;
+        border: none;
         display: block;
     }
 </style>
