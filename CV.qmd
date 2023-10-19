@@ -4,9 +4,9 @@ title: ""
 
 ```{=html}
 <!-- Estilos de PDF.js -->
-<link rel="stylesheet" href="https://alejandroromerog.github.io/web/viewer.css">
+<link rel="stylesheet" href="../web/viewer.css">
 <!-- PDF.js viewer -->
-<script src="https://alejandroromerog.github.io/build/pdf.js"></script>
+<script src="../build/pdf.js"></script>
 ```
 
 ```{=html}
@@ -36,6 +36,6 @@ title: ""
 
 ```{=html}
 <div class="responsive-iframe-container">
-    <iframe src="https://alejandroromerog.github.io/web/viewer.html?file=https://alejandroromerog.github.io/web/CV_ARG.pdf" width="100%" height="600px" style="border: none;"></iframe>
+    <iframe src="../web/viewer.html?file=../web/CV_ARG.pdf" width="100%" height="600px" style="border: none;"></iframe>
 </div>
 ```
