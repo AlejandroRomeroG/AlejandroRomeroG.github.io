@@ -27,7 +27,7 @@ title: ""
 
     .responsive-iframe-container iframe {
         width: 100%;
-        height: 100%;
+        height: 88%;
         border: none;
         display: block;
     }
@@ -36,6 +36,6 @@ title: ""
 
 ```{=html}
 <div class="responsive-iframe-container">
-    <iframe src="web/viewer.html?file=CV_ARG.pdf" width="100%" height="600px" style="border: none;"></iframe>
+    <iframe src="web/viewer.html?file=CV_ARG.pdf" width="100%" height="88%" style="border: none;"></iframe>
 </div>
 ```
