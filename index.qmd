@@ -4,7 +4,7 @@ image: images/yo_recortado.jpg
 about: 
   template: jolla
   image-shape: rounded
-  image-width: 17em
+  image-width: 14em
   links: 
     - icon: linkedin
       text: LinkedIn
