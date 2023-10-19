@@ -11,13 +11,8 @@ title: ""
 
 ```{=html}
 <style>
-    body {
-        margin: 0;
-        overflow: hidden; /* Prevenir el desplazamiento */
-    }
-
     .responsive-iframe-container {
-        position: fixed;
+        position: absolute;
         top: 98px;  /* Altura de tu menú */
         left: 0;
         right: 0;
