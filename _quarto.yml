@@ -1,6 +1,7 @@
 project:
   type: website
   output-dir: docs
+  post-render: ./post-build.sh
 
 website:
   title: "ARG"
