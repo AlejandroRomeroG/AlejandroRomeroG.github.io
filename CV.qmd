@@ -18,7 +18,7 @@ title: ""
 
     .responsive-iframe-container {
         position: fixed;
-        top: 108px;  /* Altura de tu menú */
+        top: 98px;  /* Altura de tu menú */
         left: 0;
         right: 0;
         bottom: 0;
