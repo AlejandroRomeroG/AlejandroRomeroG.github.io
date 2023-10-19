@@ -5,19 +5,26 @@ project:
 
 website:
   title: "ARG"
+  favicon: images/logos/logoB.png
   navbar:
-    left:
+    title: false
+    logo: images/logos/logoB2.png
+    right:
       - href: index.qmd
         text: Inicio
       - href: about.qmd
         text: Sobre mí
       - href: CV.qmd
         text: CV
+  page-footer: 
+    background: "#e85620"
+    left: Copyright 2023, Alejandro Romero González
+    right: This website is built with [Quarto](https://quarto.org/)
 
 format:
   html:
-    theme: united
-    css: styles.css
+    theme:
+      - tema_personalizado.scss
     toc: true
 
 
