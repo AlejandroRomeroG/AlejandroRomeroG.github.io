@@ -29,6 +29,13 @@ about:
         margin-top: 5%;
         padding-bottom: 0em;
     }
+    
+    div.quarto-about-jolla .about-image {
+    object-fit: cover;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0em;
+}
 </style>
 ```
 
