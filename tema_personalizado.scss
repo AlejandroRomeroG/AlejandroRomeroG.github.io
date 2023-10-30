@@ -129,8 +129,9 @@ body {
 /* CLASS SELECTORS (copied from inspecting site -- Quarto defined?) */
 
 // resize logo (top left corner) see https://github.com/robertmitchellv/robertmitchellv.github.io/blob/main/custom-dark.scss
-.navbar-brand img { 
-  max-height: 70px;
+.navbar-logo { 
+  max-height: 75px;
+  width: auto;
 }
 
 // headshot shape
