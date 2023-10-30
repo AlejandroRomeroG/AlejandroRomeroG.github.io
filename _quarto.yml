@@ -25,6 +25,7 @@ format:
   html:
     theme:
       - tema_personalizado.scss
+    mainfont: "Inter Tight"
     toc: true
 
 
