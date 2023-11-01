@@ -1,5 +1,5 @@
 ---
 title: "Sobre mí"
+subtitle: "Aquí voy a escribir todo lo que sé hacer siendo bien específico"
+title-block-banner: true
 ---
-
-Aquí voy a escribir todo lo que sé hacer siendo bien específico

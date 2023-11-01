@@ -1,0 +1,18 @@
+---
+title: "Publicaciones"
+subtitle: "Algunos de mis trabajos publicados como autor y coautor" 
+listing:
+  contents: publications
+  feed: true
+  sort: "date desc"
+  type: grid
+  grid-item-border: true
+  grid-item-align: left
+  max-description-length: 200
+  date-format: medium
+  #categories: numbered
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---

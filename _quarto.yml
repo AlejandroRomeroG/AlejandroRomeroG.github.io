@@ -14,6 +14,8 @@ website:
         text: Inicio
       - href: about.qmd
         text: Sobre mí
+      - href: publications.qmd
+        text: Publicaciones
       - href: CV.qmd
         text: CV
   page-footer: 
