@@ -4,7 +4,6 @@ description: |
   Tesis de Licenciatura en Economía, CIDE
 date: 2023-10-05
 image: tesis-ss.png
-draft: false
 ---
 
 <a href="Tesis_ARG.pdf" class="btn" download>{{< fa file-arrow-down >}} Descargar</a>

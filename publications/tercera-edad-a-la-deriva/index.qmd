@@ -4,7 +4,6 @@ description: |
   Nota de opinión como coautor del Dr. Gustavo A. Del Ángel Mobarak publicada en Arena Pública
 date: 2022-07-11
 image: old_people.jpeg
-draft: false
 ---
 
 <a href="https://www.arenapublica.com/gustavo-del-angel/la-tercera-edad-frente-los-servicios-financieros-digitales-la-deriva" class="btn">{{< fa book-atlas >}} Arena Pública</a>
