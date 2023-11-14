@@ -4,13 +4,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap');
 
 // Colors
-$light-sage-green: #D1D9CE;
-$dark-sage-green: #98A08D;
+$light-sage-green: #ede2d5;
+$dark-sage-green: #ada192;
 $cream: #FDFBF7;
 $dark-gray: #5A5856;
 $gray: #64605f;
 $light-gray: #949799;
-$purple: #9158A2; //#AE8BD1;
+$purple: #9158A2; 
 $black: #000000;
 $burnt-orange: #ad7237;
 
@@ -172,4 +172,9 @@ div.nav-footer div {
     margin-top: 0 !important;
     padding-top: 0 !important;
     flex: 1;                 // Esto permite que cada div ocupe espacio equitativo
+}
+
+a {
+    text-decoration: none; /* Esto elimina el subrayado */
+    color: $purple; /* Esto mantiene el color de tus enlaces como morado */
 }

@@ -19,9 +19,8 @@ website:
       - href: CV.qmd
         text: CV
   page-footer: 
-    background: "#e85620"
     left: Copyright 2023, Alejandro Romero González
-    right: This website is built with [Quarto](https://quarto.org/)
+    right: Este sitio web está construido con [Quarto](https://quarto.org/)
 
 format:
   html:
