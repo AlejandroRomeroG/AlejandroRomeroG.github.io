@@ -1,5 +1,11 @@
 [
   {
+    "listing": "/blog.html",
+    "items": [
+      "/blog/xaringan/index.html"
+    ]
+  },
+  {
     "listing": "/publications.html",
     "items": [
       "/publications/tesis-licenciatura/index.html",

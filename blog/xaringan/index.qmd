@@ -1,0 +1,267 @@
+---
+title: "Presentaciones desde RStudio con `{xaringan}`"
+description: |
+  En este tutorial muestro cómo crear presentaciones dinámicas desde RStudio mediante el uso del paquete `{xaringan}`.
+date: 2023-11-14
+categories: [R, Tutorial]
+image: xaringan.png
+draft: false
+---
+
+Primero, necesitamos instalar y cargar los paquetes necesarios:
+
+``` r
+install.packages(c("pagedown", "xaringan"), dependencies = TRUE)
+library(pagedown)
+library(xaringan)
+```
+
+Ahora, para generar nuestra primer presentación, pondremos la siguiente estructura en un archivo .Rmd vacío:
+
+``` r
+---
+title: "Práctica 1"
+subtitle: "Presentación hecha con {xaringan}"
+author: "Alejandro Romero González"
+date: "10/25/2021"
+output:
+    xaringan::moon_reader:
+      css: ["default"]
+      nature:
+        highlightStyle: github
+        highlighLine: true
+        countIncrementalSlides: true
+---
+```
+
+Al guardar dicho archivo y después darle clic a *Knit*, RStudio compilará un html con el siguiente contenido:
+
+![](uno.png)
+
+Podrás ver que la presentación está un poco fea. Para darle un mejor estilo podemos [crear nuestro propio tema](https://cran.r-project.org/web/packages/xaringanthemer/vignettes/xaringanthemer.html) o utilizar los temas precargados. Estos últimos podemos visualizarlos escribiendo lo siguiente en la consola:
+
+``` r
+names(xaringan:::list_css())
+```
+
+Yo escogeré la fuente "tamu-fonts" y el tema "shinobi". Se aplican en el .Rmd de la siguiente manera:
+
+``` r
+---
+title: "Práctica 1"
+subtitle: "Presentación hecha con {xaringan}"
+author: "Alejandro Romero González"
+date: "10/25/2021"
+output:
+    xaringan::moon_reader:
+      css: ["default", "tamu-fonts", "shinobi"]
+      nature:
+        highlightStyle: github
+        highlighLine: true
+        countIncrementalSlides: true
+---
+```
+
+Guardamos y compilamos de nuevo. El ***output*** ahora es este:
+
+![](dos.png)
+
+Ya se ve mejor. Sin embargo, está algo tedioso que una ventana adicional aparezca para poder visualizar la presentación. Es por ello que existe *Infinite Moon Reader*: éste *addin* nos permitirá visualizar la presentación en el *viewer* que está integrado a RStudio (como cuando visualizamos gráficas de `{ggplot2}`). Para activarlo solo es necesario darle clic al botón *Addins* que se encuentra en la parte superior de RStudio, buscar *Infinite Moon Reader* y oprimir clic de nuevo (si saltan avisos de que necesitamos instalar o actualizar algunos paquetes, les damos aceptar). Con esto, ya podremos visualizar la presentación desde Rstudio actualizándose en tiempo real (la mayor parte de las veces).
+
+::: {.callout-tip title="Nota"}
+Si *Infinite Moon Reader* no aparece en *Addins*, reinstalen el paquete `{xaringan}`, pero ahora desde la repo oficial en Github:
+
+``` r
+remotes::install_github("yihui/xaringan")
+```
+:::
+
+Para crear nuevas diapositivas simplemente tenemos que escribir debajo del área donde definimos el título, subtítulo, etc., e ir separando diapositiva por diapositiva con tres guiones. Ejemplo:
+
+``` r
+---
+title: "Práctica 1"
+subtitle: "Presentación hecha con {xaringan}"
+author: "Alejandro Romero González"
+date: "10/25/2021"
+output:
+    xaringan::moon_reader:
+      css: ["default", "tamu-fonts", "shinobi"]
+      nature:
+        highlightStyle: github
+        highlighLine: true
+        countIncrementalSlides: true
+---
+
+class: inverse
+
+# Mi primera diapositiva
+
+Esto es un texto
+  - Elemento 1
+  - Elemento 2
+  
+  1. Uno
+  2. Dos
+  3. Tres
+  
+---
+
+# Mi segunda diapositiva
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+```
+
+***Output***:
+
+```{=html}
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="tres.png" style="max-width: 55%; height: auto; padding: 0px;">
+    <img src="cuatro.png" style="max-width: 55%; height: auto; padding: 0px;">
+</div>
+```
+
+::: {.callout-tip title="Nota"}
+El color de fondo predeterminado del tema que escogí es el blanco, sin embargo lo cambié al color inverso con "class: inverse", como se puede ver en el código de arriba.
+:::
+
+Para poner links a una página web dentro de una diapositiva podemos hacerlo de tres maneras:
+
+``` r
+---
+
+# Diapositiva con links
+
+- Simplemente poner el link: https://cran.r-project.org/
+
+- Usar sintaxis de Rmarkdown: [link a CRAN](https://cran.r-project.org/)
+
+<br/><br/><br/>
+
+- Usar sintaxis de HTML
+<a href="https://cran.r-project.org/">
+  Link a CRAN con a href
+</a>
+```
+
+***Output***:
+
+![](cinco.png)
+
+Si queremos insertar código y gráficas de R simplemente tenemos que insertar un nuevo code chunk y escribir nuestras instrucciones:
+
+``` r
+---
+
+# Diapositiva con código y gráficas de R
+
+\```{r, out.width = "300px"}
+library(ggplot2)
+
+ggplot(mpg) +
+    aes(cty, hwy) +
+    geom_point() +
+    ggtitle("Fuel efficiency!")
+\```
+```
+
+::: {.callout-tip title="Nota"}
+En el bloque de código anterior, hemos utilizado un método especial para "escapar" el bloque de código interno de RMarkdown. Esto significa que hemos añadido barras invertidas ("\\") antes de las comillas invertidas que normalmente delimitan un bloque de código. Hacemos esto para que el bloque interno se muestre como un ejemplo de código en el documento, pero sin que se ejecute realmente como código R. 
+:::
+
+***Output***:
+
+![](seis.png)
+
+También podemos insertar imágenes (incluso pueden ser *gifs*) de dos maneras, estilo RMarkdown o estilo HTML:
+
+``` r
+---
+
+# Diapositiva con imágenes
+
+- Estilo Rmarkdown:
+![Este es Tobías](Imagenes/tobi.png)
+
+---
+
+- Estilo HTML:
+
+<div align="center">
+<img src="Imagenes/tobi.png" width="650" height="500">
+<br>
+<br>
+Este es Tobías
+</div>
+```
+
+***Output***:
+
+```{=html}
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="siete.png" style="max-width: 55%; height: auto; padding: 0px;">
+    <img src="ocho.png" style="max-width: 55%; height: auto; padding: 0px;">
+</div>
+```
+
+::: {.callout-tip title="Nota"}
+Preferiblemente hay que usar el estilo HTML debido a que no podemos cambiar el tamaño de la imagen de otro modo.
+:::
+
+La imagen que inserté anteriormente estaba guardada en la memoria de mi computadora. Sin embargo, también podemos introducir imágenes que se encuentren en internet:
+
+``` r
+---
+
+# Imagen desde internet
+
+<br>
+<div align="center">
+<img src="https://media.giphy.com/media/Ihf1VjXyflOU6Mhh3l/giphy-downsized-large.gif" width="700" height="400">
+<br>
+<br>
+Fractal de Mandelbrot
+</div>
+```
+
+***Output***:
+
+![](nueve.png)
+
+También podemos dividir cada diapositiva en dos partes e insertar ecuaciones LaTeX de la siguiente manera:
+
+``` r
+---
+
+# Dividir la diapositiva en dos y agregar fórmulas en LaTeX
+
+.pull-left[
+<br><br>
+<div align="center">
+<img src="https://media.giphy.com/media/PkKzNQjwPy7GvxZbfe/giphy.gif" width="300" height="300">
+<br><br>
+Agujero negro
+</div>
+
+]
+
+.pull-right[
+<br><br><br><br><br><br><br><br><br>
+Fórmula para hallar la temperatura de un agujero negro:
+
+$$T = \frac{\hbar c^3}{8\pi kGM}$$
+```
+
+***Output***:
+
+![](diez.png)
+
+***¡Fin!***
+
+![](once.png)
+
+::: {.callout-tip title="Notas adicionales"}
+Si quieres subir tu presentación a internet, te recomiendo seguir este otro tutorial: [https://silviacanelon.com/blog/2021-03-16-deploying-xaringan-slides/](https://silviacanelon.com/blog/2021-03-16-deploying-xaringan-slides/). 
+
+El link de la presentación que cree en el presente tutorial es el siguiente: [https://alejandroromerog.github.io/PracticaUnoXaringan/#1](https://alejandroromerog.github.io/PracticaUnoXaringan/#1).
+:::
