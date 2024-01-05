@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-10-05">
-<meta name="description" content="Tesis de Licenciatura en Economía, CIDE">
+<meta name="dcterms.date" content="2023-11-29">
+<meta name="description" content="Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.">
 
-<title>ARG - No es sólo un número: La edad en el sistema financiero mexicano</title>
+<title>ARG - Análisis de encuestas ENIF y ENAFIN</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,8 +42,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -116,13 +114,19 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">No es sólo un número: La edad en el sistema financiero mexicano</h1>
+      <h1 class="title">Análisis de encuestas ENIF y ENAFIN</h1>
                   <div>
         <div class="description">
-          <p>Tesis de Licenciatura en Economía, CIDE</p>
+          <p>Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.</p>
         </div>
       </div>
-                </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Tutorial</div>
+                <div class="quarto-category">Análisis de Datos</div>
+                <div class="quarto-category">Encuestas</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -132,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 5, 2023</p>
+        <p class="date">November 29, 2023</p>
       </div>
     </div>
     
@@ -150,11 +154,39 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><a href="Tesis_ARG.pdf" class="btn" download=""><i class="fa-solid fa-file-arrow-down" aria-label="file-arrow-down"></i> Descargar</a></p>
-<section id="resumen" class="level1">
-<h1>Resumen</h1>
-<p>En el presente estudio investigamos la existencia de disparidades financieras entre personas adultas mayores (edad ≥ 60) y personas jóvenes (edad ≤ 59) dentro del mercado financiero mexicano. Utilizando Propensity Score Matchings para garantizar una comparación adecuada entre los grupos estudiados, y respaldando nuestros resultados con análisis de estadística descriptiva, diferencias porcentuales simples y modelos probit, confirmamos la realidad de dichas desigualdades. Nuestros hallazgos, basados en los datos de la Encuesta Nacional de Inclusión Financiera 2021, a su vez revelaron barreras específicas enfrentadas por los adultos mayores en México.</p>
-<p>Para añadir robustez a nuestro trabajo, extendimos la investigación a tres cohortes distintas en las que el grupo de personas de la tercera edad era segmentado (60-69, 70-79 y 80 en adelante) y el grupo más joven se mantenía en un rango constante. Observamos signos consistentes en los efectos que tiene la edad en algunas de las prácticas de ahorro y crédito a lo largo de la última etapa vital, pero magnitudes distintas, representando un paso más en el entendimiento de este grupo. A pesar de la inclusión del sexo como variable explicativa en nuestro análisis, no encontramos diferencias significativas en este aspecto. Por todo lo anterior, concluimos que el sistema financiero mexicano perpetúa una forma de edadismo que margina a las personas de edad avanzada, subrayando la urgente necesidad de implementar estrategias que fomenten una inclusión financiera más equitativa.</p>
+<section id="descarga-de-datos" class="level1">
+<h1>Descarga de datos</h1>
+<p>Antes de sumergirnos en el código, primero debemos obtener los datos. A continuación, te guiaré a través de los pasos para descargarlos del sitio oficial del Instituto Nacional de Estadística y Geografía (INEGI). Cabe destacar que, en este tutorial, utilizaremos solamente las versiones de 2021 de ambas encuestas; sin embargo, el procedimiento es casi el mismo para cualquier edición de las mismas.</p>
+<p>En primer lugar, debemos ir al <a href="https://www.inegi.org.mx/">sitio web del INEGI</a> y buscar las encuestas ENIF y ENAFIN. Para ello, podemos utilizar el buscador que aparece en la página principal o simplemente hacer clic en los siguientes enlaces:</p>
+<ul>
+<li><a href="https://www.inegi.org.mx/programas/enif/2021/#datos_abiertos">Encuesta Nacional de Inclusión Financiera</a></li>
+<li><a href="https://www.inegi.org.mx/programas/enafin/2021/#datos_abiertos">Encuesta Nacional de Financiamiento de las Empresas</a></li>
+</ul>
+<p>Una vez que hayamos ingresado a la sección de <strong><em>Datos abiertos</em></strong> de cada encuesta, debemos cliquear estos botones que resalté con rectángulos rojos para iniciar las respectivas descargas:</p>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="ENIFDescarga.png" style="max-width: 55%; height: auto; margin-right: 2px;">
+    <img src="ENAFINDescarga.png" style="max-width: 55%; height: auto; margin-left: 2px;">
+</div>
+<p><br></p>
+<p>Ya completadas las descargas, encontraremos los archivos de ambas encuestas en nuestra computadora. Dichos archivos deben de verse así:</p>
+<p><img src="CarpetaDescargas.png" class="img-fluid"></p>
+<p>Los dos archivos vienen en formato comprimido (.zip). Para poder utilizar los datos, necesitamos descomprimirlos primero. Para ello, en Windows, podemos hacer clic derecho sobre cada archivo y seleccionar la opción <em>Extraer aquí;</em> en macOS solo basta con dar doble clic en cada uno de ellos. Al haber hecho esto, veremos que se crearán dos carpetas nuevas, una para cada encuesta, que contienen los archivos de datos, los diccionarios de variables y los modelos entidad-relación de las mismas:</p>
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <img src="CarpetaDescargas2.png" style="max-width: 59%; height: auto; margin-bottom: 2px;">
+
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="CarpetaDescargas3.png" style="max-width: 59%; height: auto; margin-right: 1px;">
+        <img src="CarpetaDescargas4.png" style="max-width: 59%; height: auto; margin-left: 1px;">
+    </div>
+</div>
+<p><br></p>
+<p>Con los datos descomprimidos listos, el siguiente paso es cargarlos en R y empezar a trabajar con ellos.</p>
+</section>
+<section id="procesamiento-de-datos" class="level1">
+<h1>Procesamiento de datos</h1>
+<p>Para empezar con el código, debemos de crear un nuevo archivo de R Markdown. Para ello, en RStudio, vamos a <em>File &gt; New File &gt; R Markdown…</em> y seleccionamos la opción <em>Create Empty Document</em>. Es una buena práctica guardar el archivo en la misma carpeta donde tenemos los datos de ambas encuestas, por lo que…</p>
+<p><br></p>
+<p><img src="en-construccion.png" class="img-fluid"></p>
 
 
 </section>

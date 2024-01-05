@@ -1,0 +1,58 @@
+---
+title: "Análisis de encuestas ENIF y ENAFIN"
+description: |
+  Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.
+date: 2023-11-29
+categories: [R, Tutorial, Análisis de Datos, Encuestas]
+image: INEGI.jpg
+draft: false
+---
+
+# Descarga de datos
+
+Antes de sumergirnos en el código, primero debemos obtener los datos. A continuación, te guiaré a través de los pasos para descargarlos del sitio oficial del Instituto Nacional de Estadística y Geografía (INEGI). Cabe destacar que, en este tutorial, utilizaremos solamente las versiones de 2021 de ambas encuestas; sin embargo, el procedimiento es casi el mismo para cualquier edición de las mismas.
+
+En primer lugar, debemos ir al [sitio web del INEGI](https://www.inegi.org.mx/) y buscar las encuestas ENIF y ENAFIN. Para ello, podemos utilizar el buscador que aparece en la página principal o simplemente hacer clic en los siguientes enlaces:
+
+* [Encuesta Nacional de Inclusión Financiera](https://www.inegi.org.mx/programas/enif/2021/#datos_abiertos)
+* [Encuesta Nacional de Financiamiento de las Empresas](https://www.inegi.org.mx/programas/enafin/2021/#datos_abiertos)
+
+Una vez que hayamos ingresado a la sección de ***Datos abiertos*** de cada encuesta, debemos cliquear estos botones que resalté con rectángulos rojos para iniciar las respectivas descargas:
+
+```{=html}
+<div style="display: flex; justify-content: center; align-items: center;">
+    <img src="ENIFDescarga.png" style="max-width: 55%; height: auto; margin-right: 2px;">
+    <img src="ENAFINDescarga.png" style="max-width: 55%; height: auto; margin-left: 2px;">
+</div>
+```
+
+<br>
+
+Ya completadas las descargas, encontraremos los archivos de ambas encuestas en nuestra computadora. Dichos archivos deben de verse así:
+
+![](CarpetaDescargas.png)
+
+Los dos archivos vienen en formato comprimido (.zip). Para poder utilizar los datos, necesitamos descomprimirlos primero. Para ello, en Windows, podemos hacer clic derecho sobre cada archivo y seleccionar la opción *Extraer aquí;* en macOS solo basta con dar doble clic en cada uno de ellos. Al haber hecho esto, veremos que se crearán dos carpetas nuevas, una para cada encuesta, que contienen los archivos de datos, los diccionarios de variables y los modelos entidad-relación de las mismas:
+
+```{=html}
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <img src="CarpetaDescargas2.png" style="max-width: 59%; height: auto; margin-bottom: 2px;">
+
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <img src="CarpetaDescargas3.png" style="max-width: 59%; height: auto; margin-right: 1px;">
+        <img src="CarpetaDescargas4.png" style="max-width: 59%; height: auto; margin-left: 1px;">
+    </div>
+</div>
+```
+
+<br>
+
+Con los datos descomprimidos listos, el siguiente paso es cargarlos en R y empezar a trabajar con ellos.
+
+# Procesamiento de datos
+
+Para empezar con el código, debemos de crear un nuevo archivo de R Markdown. Para ello, en RStudio, vamos a *File > New File > R Markdown...* y seleccionamos la opción *Create Empty Document*. Es una buena práctica guardar el archivo en la misma carpeta donde tenemos los datos de ambas encuestas, por lo que...
+
+<br>
+
+![](en-construccion.png)
