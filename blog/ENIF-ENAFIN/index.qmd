@@ -2,7 +2,7 @@
 title: "Análisis de encuestas ENIF y ENAFIN"
 description: |
   Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.
-date: 2023-11-29
+date: 2024-01-05
 categories: [R, Tutorial, Análisis de Datos, Encuestas]
 image: INEGI.jpg
 draft: false
