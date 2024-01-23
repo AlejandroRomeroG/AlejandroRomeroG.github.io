@@ -263,5 +263,5 @@ return(plot_acw)
 ```
 
 ```{webr-r}
-ACW(77)
+ACW(Regla = 77)
 ```
