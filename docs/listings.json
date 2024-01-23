@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/blog/ACW/index.html",
       "/blog/ENIF-ENAFIN/index.html",
       "/blog/xaringan/index.html"
     ]
