@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-01-23">
 <meta name="description" content="En este artículo, presento una exploración práctica de los ACW, utilizando R y {ggplot2} para la visualización. Esta implementación busca ilustrar cómo reglas sencillas pueden dar lugar a dinámicas, a veces, impredecibles.">
 
 <title>ARG - Implementación de los Autómatas Celulares de Wolfram en R</title>
@@ -84,16 +83,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "type": "overlay",
   "limit": 20,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
   }
 }</script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/editor/editor.main.css">
@@ -246,7 +245,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"options":{"context":"setup"},"code":"library(dplyr) # para la manipulación de datos\nlibrary(ggplot2) # para la creación de gráficos\n\ngetBinaryRule <- function(ruleNumber) {\n  # Convierte el número en una secuencia de bits:\n  ruleBinary <- intToBits(ruleNumber)[1:8]\n  # Convierte la secuencia de bits en un vector de enteros:\n  ruleBinary <- as.integer(rev(ruleBinary))\n  return(ruleBinary)\n}\n\nACW <- function(Regla) {\n# Selecciona la regla número 135:\nruleNumber <- Regla\n# Convierte la regla a su representación binaria:\nruleSet <- getBinaryRule(ruleNumber)\n# Establece el número de células y generaciones para la simulación:\nnumCells <- 101\ngenerations <- 101\n# Crea una matriz para representar cada generación de células:\ngrid <- matrix(nrow = generations, ncol = numCells)\n\n# Inicializa todas las células en estado inactivo (0):\ncells <- rep(0, numCells)\n# Activa la célula central:\ncells[ceiling(numCells / 2)] <- 1\n# Establece la configuración previa como la primera generación en nuestra matriz:\ngrid[1, ] <- cells\n\n# Bucle a través de cada generación, empezando por la segunda:\nfor (gen in 2:generations) {\n  # Bucle a través de cada célula en la generación:\n  for (i in 1:numCells) {\n    # Calcula los índices de las vecinas izquierda y derecha, \n    # considerando condiciones de frontera periódicas\n    # (si la célula está en el borde, la vecina es la primera o la última):\n    left_index <- ifelse(i == 1, numCells, i - 1)\n    right_index <- ifelse(i == numCells, 1, i + 1)\n\n    # Obtiene los estados de las vecinas y de la célula central:\n    left <- grid[gen - 1, left_index]\n    center <- grid[gen - 1, i]\n    right <- grid[gen - 1, right_index]\n\n    # Calcula el patrón de vecindario en versión entera (nota más adelante):\n    neighborhood <- left * 4 + center * 2 + right\n    # Determina el nuevo estado basado en la respectiva regla:\n    grid[gen, i] <- ruleSet[8 - neighborhood]\n  }\n}\n\n# Crea un data frame con todas las combinaciones de células y generaciones:\ndf <- expand.grid(x = 1:numCells, y = 1:generations)\n# Asigna los valores de la cuadrícula al data frame, ajustando la estructura.\n# La transposición cambia las filas por columnas y viceversa para que cada\n# columna represente una generación y cada fila una célula.\n# La función as.vector() convierte la matriz en un vector para que podamos ir\n# asignando valores de generación en generación, como esta creado el data frame:\ndf$value <- as.vector(t(grid))\n# Ajusta el eje y para que las generaciones se muestren en el orden correcto\n# (de arriba a abajo):\ndf$y <- generations - df$y + 1\n\n# Crea un gráfico con ggplot2:\nplot_acw <- ggplot(df, aes(x = x, y = y, fill = factor(value))) +\n  geom_tile() + # Crea un gráfico de mosaico\n  scale_fill_manual(values = c(\"white\", \"black\")) + # Define los colores\n  theme(legend.position = \"none\", # Elimina la leyenda\n        panel.grid = element_blank(), # Elimina las líneas de la cuadrícula\n        axis.title = element_blank(), # Elimina los títulos de los ejes\n        axis.text = element_blank(), # Elimina las etiquetas de los ejes\n        axis.ticks = element_blank(), # Elimina las marcas de los ejes\n        panel.background = element_blank(), # Elimina el fondo del panel\n        panel.border = element_blank()) # Elimina el borde del panel\n\nreturn(plot_acw)\n}","id":1},{"options":{"context":"interactive"},"code":"ACW(Regla = 77)","id":2}];
+globalThis.qwebrCellDetails = [{"id":1,"options":{"context":"setup"},"code":"library(dplyr) # para la manipulación de datos\nlibrary(ggplot2) # para la creación de gráficos\n\ngetBinaryRule <- function(ruleNumber) {\n  # Convierte el número en una secuencia de bits:\n  ruleBinary <- intToBits(ruleNumber)[1:8]\n  # Convierte la secuencia de bits en un vector de enteros:\n  ruleBinary <- as.integer(rev(ruleBinary))\n  return(ruleBinary)\n}\n\nACW <- function(Regla) {\n# Selecciona la regla número 135:\nruleNumber <- Regla\n# Convierte la regla a su representación binaria:\nruleSet <- getBinaryRule(ruleNumber)\n# Establece el número de células y generaciones para la simulación:\nnumCells <- 101\ngenerations <- 101\n# Crea una matriz para representar cada generación de células:\ngrid <- matrix(nrow = generations, ncol = numCells)\n\n# Inicializa todas las células en estado inactivo (0):\ncells <- rep(0, numCells)\n# Activa la célula central:\ncells[ceiling(numCells / 2)] <- 1\n# Establece la configuración previa como la primera generación en nuestra matriz:\ngrid[1, ] <- cells\n\n# Bucle a través de cada generación, empezando por la segunda:\nfor (gen in 2:generations) {\n  # Bucle a través de cada célula en la generación:\n  for (i in 1:numCells) {\n    # Calcula los índices de las vecinas izquierda y derecha, \n    # considerando condiciones de frontera periódicas\n    # (si la célula está en el borde, la vecina es la primera o la última):\n    left_index <- ifelse(i == 1, numCells, i - 1)\n    right_index <- ifelse(i == numCells, 1, i + 1)\n\n    # Obtiene los estados de las vecinas y de la célula central:\n    left <- grid[gen - 1, left_index]\n    center <- grid[gen - 1, i]\n    right <- grid[gen - 1, right_index]\n\n    # Calcula el patrón de vecindario en versión entera (nota más adelante):\n    neighborhood <- left * 4 + center * 2 + right\n    # Determina el nuevo estado basado en la respectiva regla:\n    grid[gen, i] <- ruleSet[8 - neighborhood]\n  }\n}\n\n# Crea un data frame con todas las combinaciones de células y generaciones:\ndf <- expand.grid(x = 1:numCells, y = 1:generations)\n# Asigna los valores de la cuadrícula al data frame, ajustando la estructura.\n# La transposición cambia las filas por columnas y viceversa para que cada\n# columna represente una generación y cada fila una célula.\n# La función as.vector() convierte la matriz en un vector para que podamos ir\n# asignando valores de generación en generación, como esta creado el data frame:\ndf$value <- as.vector(t(grid))\n# Ajusta el eje y para que las generaciones se muestren en el orden correcto\n# (de arriba a abajo):\ndf$y <- generations - df$y + 1\n\n# Crea un gráfico con ggplot2:\nplot_acw <- ggplot(df, aes(x = x, y = y, fill = factor(value))) +\n  geom_tile() + # Crea un gráfico de mosaico\n  scale_fill_manual(values = c(\"white\", \"black\")) + # Define los colores\n  theme(legend.position = \"none\", # Elimina la leyenda\n        panel.grid = element_blank(), # Elimina las líneas de la cuadrícula\n        axis.title = element_blank(), # Elimina los títulos de los ejes\n        axis.text = element_blank(), # Elimina las etiquetas de los ejes\n        axis.ticks = element_blank(), # Elimina las marcas de los ejes\n        panel.background = element_blank(), # Elimina el fondo del panel\n        panel.border = element_blank()) # Elimina el borde del panel\n\nreturn(plot_acw)\n}"},{"id":2,"options":{"context":"interactive"},"code":"ACW(Regla = 77)"}];
 
 </script>
 <script type="module">
@@ -853,8 +852,8 @@ globalThis.qwebrExecuteCode = async function (
     <img src="../../images/logos/logoB2.png" alt="" class="navbar-logo">
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -910,9 +909,9 @@ globalThis.qwebrExecuteCode = async function (
 
       
       <div>
-      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-heading">Fecha de publicación</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">January 23, 2024</p>
+        <p class="date">23 de enero de 2024</p>
       </div>
     </div>
     
@@ -1109,7 +1108,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># para la manipulación de datos</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># para la creación de gráficos</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggview) <span class="co"># para visualizar los gráficos en el Viewer sin guardarlos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggview) <span class="co"># para visualizar los gráficos en el Viewer sin guardarlos</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="definición-de-la-función-para-reglas-binarias" class="level2">
@@ -1124,7 +1123,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convierte la secuencia de bits en un vector de enteros:</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  ruleBinary <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">rev</span>(ruleBinary))</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ruleBinary)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Tras definir la función <code>getBinaryRule</code>, nuestro siguiente paso es establecer el escenario para la simulación de nuestro ACW. Esto implica inicializar las reglas que determinarán el comportamiento de las células y preparar la población inicial en nuestro modelo.</p>
 </section>
@@ -1140,7 +1139,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>numCells <span class="ot">&lt;-</span> <span class="dv">101</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>generations <span class="ot">&lt;-</span> <span class="dv">101</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea una matriz para representar cada generación de células:</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> generations, <span class="at">ncol =</span> numCells)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> generations, <span class="at">ncol =</span> numCells)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="configuración-de-la-población-inicial" class="level2">
@@ -1152,7 +1151,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Activa la célula central:</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>cells[<span class="fu">ceiling</span>(numCells <span class="sc">/</span> <span class="dv">2</span>)] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Establece la configuración previa como la primera generación en nuestra matriz:</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>grid[<span class="dv">1</span>, ] <span class="ot">&lt;-</span> cells</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>grid[<span class="dv">1</span>, ] <span class="ot">&lt;-</span> cells</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Así, estamos en posición de simular cómo estas células evolucionarán a lo largo de las generaciones bajo la regla seleccionada. Este es el núcleo de los ACW, donde las simples reglas locales conducen a patrones complejos y a menudo sorprendentes a lo largo del tiempo.</p>
 </section>
@@ -1180,7 +1179,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determina el nuevo estado basado en la respectiva regla:</span></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    grid[gen, i] <span class="ot">&lt;-</span> ruleSet[<span class="dv">8</span> <span class="sc">-</span> neighborhood]</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
@@ -1217,7 +1216,7 @@ Nota
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">t</span>(grid))</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajusta el eje y para que las generaciones se muestren en el orden correcto</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># (de arriba a abajo):</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>y <span class="ot">&lt;-</span> generations <span class="sc">-</span> df<span class="sc">$</span>y <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>y <span class="ot">&lt;-</span> generations <span class="sc">-</span> df<span class="sc">$</span>y <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Ahora que tenemos nuestros datos en el formato correcto, podemos proceder a visualizarlos utilizando <code>{ggplot2}</code>. Esta herramienta nos permite crear una representación gráfica clara y atractiva de cómo cambian las células a lo largo del tiempo:</p>
 <div class="cell">
@@ -1237,7 +1236,7 @@ Nota
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#ggview(plot_acw, width=10, height = 10, dpi = 500, units = "in")</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Guarda el gráfico como un archivo PNG:</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("acw_135.png", width=10, height = 10, dpi = 1000, units = "in")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave("acw_135.png", width=10, height = 10, dpi = 1000, units = "in")</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>El resultado de todo lo anterior es una visualización de la evolución de nuestro ACW bajo la regla 135:</p>
 <p><img src="acw_135.png" class="img-fluid"></p>
@@ -1308,12 +1307,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // flash "checked"
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
+    button.setAttribute("title", "Copiado");
     let tooltip;
     if (window.bootstrap) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
+      button.setAttribute("data-bs-title", "Copiado");
       tooltip = new bootstrap.Tooltip(button, 
         { trigger: "manual", 
           customClass: "code-copy-button-tooltip",

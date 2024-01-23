@@ -5,3 +5,5 @@ freeze: true
 title-block-banner: true
 
 toc: false
+
+lang: es

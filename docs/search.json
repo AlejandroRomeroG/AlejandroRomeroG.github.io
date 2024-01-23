@@ -4,7 +4,7 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Implementación de los Autómatas Celulares de Wolfram en R\n\n\n\nR\n\n\nTutorial\n\n\nVisualización\n\n\nAutómatas Celulares\n\n\n\nEn este artículo, presento una exploración práctica de los ACW, utilizando R y {ggplot2} para la visualización. Esta implementación busca ilustrar cómo reglas sencillas pueden dar lugar a…\n\n\n\n\n\n\nJan 23, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnálisis de encuestas ENIF y ENAFIN\n\n\n\nR\n\n\nTutorial\n\n\nAnálisis de Datos\n\n\nEncuestas\n\n\n\nEste tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.\n\n\n\n\n\n\nJan 5, 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentaciones desde RStudio con {xaringan}\n\n\n\nR\n\n\nTutorial\n\n\n\nEn este tutorial muestro cómo crear presentaciones dinámicas desde RStudio mediante el uso del paquete {xaringan}.\n\n\n\n\n\n\nNov 14, 2023\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Implementación de los Autómatas Celulares de Wolfram en R\n\n\n\nR\n\n\nTutorial\n\n\nVisualización\n\n\nAutómatas Celulares\n\n\n\nEn este artículo, presento una exploración práctica de los ACW, utilizando R y {ggplot2} para la visualización. Esta implementación busca ilustrar cómo reglas sencillas pueden dar lugar a…\n\n\n\n\n\n\n23 ene 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnálisis de encuestas ENIF y ENAFIN\n\n\n\nR\n\n\nTutorial\n\n\nAnálisis de Datos\n\n\nEncuestas\n\n\n\nEste tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.\n\n\n\n\n\n\n5 ene 2024\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPresentaciones desde RStudio con {xaringan}\n\n\n\nR\n\n\nTutorial\n\n\n\nEn este tutorial muestro cómo crear presentaciones dinámicas desde RStudio mediante el uso del paquete {xaringan}.\n\n\n\n\n\n\n14 nov 2023\n\n\n\n\n\n\n\n\nNo hay resultados"
   },
   {
     "objectID": "about.html",
@@ -116,6 +116,6 @@
     "href": "publications.html",
     "title": "Publicaciones",
     "section": "",
-    "text": "No es sólo un número: La edad en el sistema financiero mexicano\n\n\nTesis de Licenciatura en Economía, CIDE\n\n\n\n\n\n\nOct 5, 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLa tercera edad frente a los servicios financieros digitales ¿A la deriva?\n\n\nNota de opinión como coautor del Dr. Gustavo A. Del Ángel Mobarak publicada en Arena Pública\n\n\n\n\n\n\nJul 11, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "No es sólo un número: La edad en el sistema financiero mexicano\n\n\nTesis de Licenciatura en Economía, CIDE\n\n\n\n\n\n\n5 oct 2023\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLa tercera edad frente a los servicios financieros digitales ¿A la deriva?\n\n\nNota de opinión como coautor del Dr. Gustavo A. Del Ángel Mobarak publicada en Arena Pública\n\n\n\n\n\n\n11 jul 2022\n\n\n\n\n\n\n\n\nNo hay resultados"
   }
 ]

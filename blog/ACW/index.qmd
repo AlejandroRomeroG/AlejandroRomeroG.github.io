@@ -10,6 +10,7 @@ engine: knitr
 webr: 
   show-startup-message: true
   packages: ['ggplot2', 'dplyr']
+  autoload-packages: true
 filters:
   - webr
 ---
