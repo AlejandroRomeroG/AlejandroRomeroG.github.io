@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: docs
   post-render: ./post-build.sh
+  preview:
+    port: 7779
 
 website:
   title: "ARG"
@@ -20,7 +22,15 @@ website:
         text: Blog
       - href: CV.qmd
         text: CV
-  google-analytics: "G-YVC0YB78PW"
+  cookie-consent: 
+    type: implied
+    style: simple
+    palette: light
+    language: es
+    prefs-text: "Configuración de Cookies"
+  google-analytics: 
+    tracking-id: "G-YVC0YB78PW"
+    anonymize-ip: true
   page-footer: 
     left: Copyright 2023, Alejandro Romero González
     right: Este sitio web está construido con [Quarto](https://quarto.org/)
