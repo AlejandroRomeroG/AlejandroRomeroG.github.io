@@ -20,6 +20,7 @@ website:
         text: Blog
       - href: CV.qmd
         text: CV
+  google-analytics: "G-YVC0YB78PW"
   page-footer: 
     left: Copyright 2023, Alejandro Romero González
     right: Este sitio web está construido con [Quarto](https://quarto.org/)
