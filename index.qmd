@@ -1,6 +1,7 @@
 ---
 title: ""
 image: images/yo_recortado.jpg
+lightbox: true
 about: 
   template: jolla
   image-shape: rounded

@@ -137,6 +137,21 @@ body {
   width: auto;
 }
 
+// center logo
+
+.navbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-brand-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+
 // headshot shape
 .rounded { 
     border-radius: 50px 20px 50px 20px !important;
