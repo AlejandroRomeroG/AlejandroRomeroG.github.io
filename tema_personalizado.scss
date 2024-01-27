@@ -135,12 +135,9 @@ body {
 .navbar-logo { 
   max-height: 75px;
   width: auto;
-  justify-content: center;
-  align-items: center;
 }
 
-// center logo
-
+@media (max-width: 991px) { /* Ajusta este valor según tus necesidades */
 .navbar-container {
   display: flex;
   justify-content: center;
@@ -156,6 +153,7 @@ body {
 .navbar-brand {
   margin-right: auto; /* Empuja el logo hacia la izquierda */
   transform: translateX(20%); /* Mueve el logo hacia la derecha */
+}
 }
 
 // headshot shape
