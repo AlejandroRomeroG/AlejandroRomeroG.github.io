@@ -13,8 +13,8 @@ about:
     - icon: envelope
       text: Email
       href: mailto:alejandro.romero@alumnos.cide.edu
-    - icon: twitter
-      text: Twitter
+    - icon: twitter-x
+      text: ~~Twitter~~
       href: https://twitter.com/ale_romero0
     - icon: github
       text: GitHub
