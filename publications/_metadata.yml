@@ -9,3 +9,9 @@ toc: false
 lang: es
 
 lightbox: true
+
+format:
+  html:
+    comments:
+      utterances:
+         repo: AlejandroRomeroG/AlejandroRomeroG.github.io
