@@ -6,7 +6,7 @@ date: 2023-10-05
 image: tesis-ss.png
 ---
 
-<a href="Tesis_ARG.pdf" class="btn" download>{{< fa file-arrow-down >}} Descargar</a>
+<a href="Tesis_ARG.pdf" class="btn" download>{{< fa file-pdf >}} Descargar</a> <a href="https://alejandroromerog.github.io/PresentacionTesina/" class="btn">{{< fa person-chalkboard >}} Presentación</a>
 
 # Resumen
 
