@@ -1,6 +1,6 @@
 ---
 title: "Blog"
-subtitle: "Tutoriales y consejos de programación e *insights* de proyectos personales" 
+subtitle: "Tutoriales de programación, proyectos personales y más" 
 listing:
   contents: blog
   feed: true

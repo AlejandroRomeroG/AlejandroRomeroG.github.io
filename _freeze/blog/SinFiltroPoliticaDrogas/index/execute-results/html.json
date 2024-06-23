@@ -1,0 +1,15 @@
+{
+  "hash": "760754e7ea033a75d3f5e69680941df4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Política de Drogas en _Sin Filtro_ de N+\"\ndescription: |\n  El 04 de febrero de 2024 participé en el programa _Sin Filtro_ de N+, donde discutimos acerca de la Política de Drogas en México.\ndate: 2024-02-04\ncategories: [Política de Drogas, Regulación, Seguridad, TV]\nimage: SinFiltro20240204.png\ndraft: false\nengine: knitr\n---\n\n\n<a href=\"https://www.nmas.com.mx/foro-tv/programas/sin-filtro/episodios/sin-filtro-programa-completo-domingo-4-febrero-2024/\" class=\"btn\">{{< fa circle-play >}} &nbsp;Ver Programa Completo</a>\n\nEl 04 de febrero de 2024, tuve el honor de participar en el programa _Sin Filtro_ de N+, conducido por Natalia Sánchez. El tema del programa fue la Política de Drogas y las problemáticas relacionadas con la regulación y la seguridad en México. En este episodio abordamos cuestiones cruciales como la regulación del fentanilo, la marihuana y los vapeadores.\n\nDurante mi participación, presenté evidencia empírica y ofrecí perspectivas globales sobre estas sustancias. Además, realicé una revisión histórica del prohibicionismo en México, subrayando la importancia de adoptar un enfoque informado y basado en la reducción de daños para abordar estos complejos problemas. El panel estuvo compuesto por destacados jóvenes expertas y expertos, entre ellas Kinari Bustos, Jeter Peralta y José Ángel Bazán, quienes también compartieron sus valiosas opiniones y experiencias sobre el tema.\n\nPuedes ver el episodio completo haciendo clic en el botón de arriba. Agradezco a Natalia Sánchez y a todo el equipo de _Sin Filtro_ por la invitación y la oportunidad de participar en este importante programa. ¡Espero que disfrutes la discusión!",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
