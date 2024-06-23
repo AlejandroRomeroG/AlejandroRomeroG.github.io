@@ -1,7 +1,7 @@
 ---
 title: "Política de Drogas en _Sin Filtro_ de N+"
 description: |
-  El 04 de febrero de 2024 participé en el programa _Sin Filtro_ de N+, donde discutimos acerca de la Política de Drogas en México.
+  Participé en el programa _Sin Filtro_ de N+, donde discutimos acerca de la Política de Drogas en México.
 date: 2024-02-04
 categories: [Política de Drogas, Regulación, Seguridad, TV]
 image: SinFiltro20240204.png
