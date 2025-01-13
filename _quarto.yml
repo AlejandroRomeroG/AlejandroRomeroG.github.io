@@ -26,7 +26,7 @@ website:
     tracking-id: "G-YVC0YB78PW"
     anonymize-ip: true
   page-footer: 
-    left: Copyright 2024, Alejandro Romero González
+    left: Copyright 2025, Alejandro Romero González
     right: Este sitio web está construido con [Quarto](https://quarto.org/)
 format:
   html:
