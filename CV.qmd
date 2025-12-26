@@ -5,7 +5,7 @@ title: ""
 ```{=html}
 <!-- Estilos de PDF.js -->
 <link rel="stylesheet" href="web/viewer.css">
-<!-- PDF.js viewer -->
+<!-- Visualizador de PDF.js -->
 <script src="build/pdf.js"></script>
 ```
 
