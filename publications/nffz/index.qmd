@@ -1,0 +1,13 @@
+---
+title: "The Impact of Special Economic Zones on Border Regions in Mexico"
+description: |
+  Article (with D. Ventosa-Santaulária and Raúl Cepeda-Suárez) published in *Bulletin of Economic Research*.
+date: 2025-10-20
+image: synth_control.jpg
+---
+
+<a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/boer.70012" class="btn">{{< fa book-open >}} Wiley Online Library</a>
+
+# Abstract
+
+We analyze the effects of a major tax reduction and a doubling of the minimum wage in the Northern region of Mexico, using a synthetic control approach. This quasi-natural experiment allows us to isolate the impact of a 50% value-added tax cut, a 30% income tax (Impuesto Sobre la Renta, ISR) reduction, and a significant wage increase on economic growth. At the time, the minimum wage in the zone was approximately 5 USD per day (2023 values). Despite the wage doubling, our findings show notable economic growth, with gross state product increasing over 4% and surpassing 7% post-pandemic. These results underscore how targeted local fiscal policies can stimulate economic performance, offering valuable lessons for policy design in emerging economies.
