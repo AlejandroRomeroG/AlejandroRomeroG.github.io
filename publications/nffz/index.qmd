@@ -1,12 +1,13 @@
 ---
 title: "The Impact of Special Economic Zones on Border Regions in Mexico"
 description: |
-  Article (with D. Ventosa-Santaulária and Raúl Cepeda-Suárez) published in *Bulletin of Economic Research*.
+  Article with D. Ventosa-Santaulária and Raúl Cepeda-Suárez published in *Bulletin of Economic Research*.
 date: 2025-10-20
 image: synth_control.jpg
 ---
 
-<a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/boer.70012" class="btn">{{< fa book-open >}} Wiley Online Library</a>
+<a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/boer.70012" class="btn">{{< fa book-open >}} Wiley Online Library</a> <a href="https://redaccion.nexos.com.mx/salario-minimo-y-reduccion-fiscal-en-la-frontera-norte-un-programa-exitoso/"
+   class="btn">{{< fa newspaper >}} Spanish summary on Nexos</a>
 
 # Abstract
 

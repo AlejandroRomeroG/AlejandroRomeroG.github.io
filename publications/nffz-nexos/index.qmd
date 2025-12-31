@@ -1,0 +1,19 @@
+---
+title: "Salario mínimo y reducción fiscal en la frontera norte: ¿un programa exitoso?"
+description: |
+  Spanish summary of our research on the Northern Border Free Zone program, published on Nexos with Raúl Cepeda Suárez and Daniel Ventosa-Santaulària.
+date: 2024-06-14
+image: PZLFN.jpg
+lang: en
+---
+
+<a href="https://redaccion.nexos.com.mx/salario-minimo-y-reduccion-fiscal-en-la-frontera-norte-un-programa-exitoso/" class="btn">{{< fa newspaper >}} Read on Nexos (Spanish)</a>
+<a href="/path/to/paper-page.html" class="btn">{{< fa book-open >}} Full research article (English)</a>
+
+# Overview
+
+This article, published on Nexos, presents the main findings and policy implications of our academic study on the *Zona Libre de la Frontera Norte:* Mexico’s Northern Border Free Zone program. The summary, written in Spanish for a general audience, explains the methodology and highlights the positive effect of the program on the gross state product of Baja California.
+
+::: {.callout-caution}
+In the figure included in the Nexos post, the legend labels are inverted: **“Observado”** corresponds to the **black** line, and **“Ficticio”** to the **gray** line.
+:::
