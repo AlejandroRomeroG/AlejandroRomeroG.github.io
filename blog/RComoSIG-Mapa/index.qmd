@@ -83,7 +83,7 @@ library(ggplot2) # para crear gráficos
 library(readxl) # para leer nuestro archivo Excel
 ```
 
-El siguiente paso es importar los archivos que vamos a utilizar. Para simplificar el proceso, asumiré que tanto la carpeta que contiene el Shapefile extraída de `AE_estatal_2022.zip` llamada `dest_2010gw`, como el archivo de Excel se encuentran en la misma carpeta que el archivo `.R`, `.Rmd` o `.qmd` desde el cual estamos trabajando. Esta forma de organizar el proyecto es bastante útil cuando apenas estamos comenzando, porque nos permite leer los archivos directamente por su nombre, sin necesidad de escribir rutas más largas o complejas. Si quisieramos organizar nuestro proyecto de una manera más estructurada, podríamos crear subcarpetas como `data` para guardar nuestros archivos de datos, y entonces la ruta para leer el Shapefile sería algo así como `data/dest_2010gw/dest_2010gw.shp`, y para el Excel sería `data/Anexo estadístico entidades 2022.xlsx`. Sin embargo, para este tutorial mantendremos las cosas simples y asumiremos que ambos archivos están en la raíz del proyecto.
+El siguiente paso es importar los archivos que vamos a utilizar. Para simplificar el proceso, asumiré que tanto la carpeta que contiene el Shapefile extraída de `AE_estatal_2022.zip` llamada `dest_2010gw`, como el archivo de Excel se encuentran en la misma carpeta que el archivo `.R`, `.Rmd` o `.qmd` desde el cual estamos trabajando. Esta forma de organizar el proyecto es bastante útil cuando apenas estamos comenzando, porque nos permite leer los archivos directamente por su nombre, sin necesidad de escribir rutas más largas o complejas. Si quisiéramos organizar nuestro proyecto de una manera más estructurada, podríamos crear subcarpetas como `data` para guardar nuestros archivos de datos, y entonces la ruta para leer el Shapefile sería algo así como `data/dest_2010gw/dest_2010gw.shp`, y para el Excel sería `data/Anexo estadístico entidades 2022.xlsx`. Sin embargo, para este tutorial mantendremos las cosas simples y asumiremos que ambos archivos están en la raíz del proyecto.
 
 Primero comenzaremos importando el Shapefile. Como ya se mencionó antes, aunque un Shapefile está compuesto por varios archivos, para leerlo en R basta con indicar la ruta del archivo `.shp`, siempre y cuando los demás componentes esenciales se encuentren en la misma carpeta. En nuestro caso, como la carpeta `dest_2010gw` está en la raíz del proyecto, podemos importarlo de la siguiente manera:
 
@@ -91,7 +91,7 @@ Primero comenzaremos importando el Shapefile. Como ya se mencionó antes, aunque
 mapa_mexico <- st_read("dest_2010gw/dest_2010gw.shp")
 ```
 
-Si todo salió bien, R nos mostrará en la consola un breve resumen del objeto espacial que acabamos de importar: el número de observaciones (features), el número de variables (fields), el tipo de geometría, la extensión espacial del objeto y el sistema de referencia de coordenadas. En este caso, veremos que, la capa se encuentra en el sistema **WGS 84**, uno de los más comunes para trabajar con información geográfica. Para inspeccionar con más detalle el objeto importado y sus atributos, basta con escribir su nombre:
+Si todo salió bien, R nos mostrará en la consola un breve resumen del objeto espacial que acabamos de importar: el número de observaciones (features), el número de variables (fields), el tipo de geometría, la extensión espacial del objeto y el sistema de referencia de coordenadas. En este caso, veremos que la capa se encuentra en el sistema **WGS 84**, uno de los más comunes para trabajar con información geográfica. Para inspeccionar con más detalle el objeto importado y sus atributos, basta con escribir su nombre:
 
 ```{r}
 mapa_mexico
@@ -133,7 +133,7 @@ hojas_estados <- hojas[!(hojas %in% c("Contenido", "Estados Unidos Mexicanos"))]
 hojas_estados
 ```
 
-Ahora construiremos una pequeña función que lea cada hoja estatal, localice la fila de **Población en situación de pobreza** y extraiga el porcentaje correspondiente a 2016, 2018, 2020 y 2022, respectivamente En este archivo, esa información se encuentra en la tercera columna para el nombre del indicador y en la cuarta, quinta, sexta y séptima columna para el porcentaje de los años ya mencionados.
+Ahora construiremos una pequeña función que lea cada hoja estatal, localice la fila de **Población en situación de pobreza** y extraiga el porcentaje correspondiente a 2016, 2018, 2020 y 2022, respectivamente. En este archivo, esa información se encuentra en la tercera columna para el nombre del indicador y en la cuarta, quinta, sexta y séptima columna para el porcentaje de los años ya mencionados.
 
 ```{r}
 extraer_pobreza <- function(hoja) {
@@ -212,7 +212,7 @@ mapa_pobreza <- mapa_mexico |>
 
 ## Construcción de mapas coropléticos
 
-Ahora pasemos a la parte más visual del tutorial. Como ya tenemos la geometría de cada entidad y el porcentaje de población en pobreza para varios años dentro de un mismo objeto `sf`, podemos comenzar construyendo un primer mapa para 2016. La lógica de `{ggplot2}` en este caso es bastante simple: usaremos `geom_sf()` para dibujar las entidades federativas y asignaremos la variable `pobreza_2022` al argumento `fill`, que controla el color de relleno de cada polígono.
+Ahora pasemos a la parte más visual del tutorial. Como ya tenemos la geometría de cada entidad y el porcentaje de población en pobreza para varios años dentro de un mismo objeto `sf`, podemos comenzar construyendo un primer mapa para 2016. La lógica de `{ggplot2}` en este caso es bastante simple: usaremos `geom_sf()` para dibujar las entidades federativas y asignaremos la variable `pobreza_2016` al argumento `fill`, que controla el color de relleno de cada polígono.
 
 ```{r}
 mapa_2016 <- ggplot(mapa_pobreza) +
