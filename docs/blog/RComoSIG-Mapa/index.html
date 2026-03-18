@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="En este tutorial muestro cómo utilizar R como Sistema de Información Geográfica (SIG) para construir mapas coropléticos de México por entidad federativa, al tiempo que explico las diferencias entre Shapefiles y GeoPackages.">
+
+<title>ARG - R como SIG: Shapefiles, GeoPackages y mapas coropléticos de México</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/logos/logoB.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Sin resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-YVC0YB78PW"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
+</script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/logos/logoB2.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Sobre mí</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publicaciones</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../CV.html"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">R como SIG: Shapefiles, GeoPackages y mapas coropléticos de México</h1>
+                  <div>
+        <div class="description">
+          <p>En este tutorial muestro cómo utilizar R como Sistema de Información Geográfica (SIG) para construir mapas coropléticos de México por entidad federativa, al tiempo que explico las diferencias entre Shapefiles y GeoPackages.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Tutorial</div>
+                <div class="quarto-category">Visualización</div>
+                <div class="quarto-category">Mapas</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Fecha de publicación</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">13 de marzo de 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Si nunca has trabajado con mapas en R, es completamente normal que términos como <em>SIG</em>, <em>Shapefile</em>, <em>GeoPackage</em>, <em>geometría</em> o <em>sistema de coordenadas</em> suenen un poco intimidantes. La buena noticia es que, una vez comprendamos las ideas básicas, gran parte del trabajo se parece bastante a lo que ya hacemos normalmente en R: leer archivos, limpiar datos, unir tablas y hacer visualizaciones.</p>
+<p>Primero entenderemos qué es un SIG y qué tipo de datos utiliza. Después veremos dos de los formatos vectoriales más comunes: el <strong>Shapefile</strong> y el <strong>GeoPackage</strong>. Finalmente, construiremos <strong>mapas coropléticos</strong> de México por estado; es decir, mapas donde cada estado se colorea de acuerdo con el valor de una variable.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Nota">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>En los SIG existen dos grandes tipos de datos espaciales:</p>
+<ul>
+<li><strong>Vectoriales</strong>: Representan puntos, líneas y polígonos.</li>
+<li><strong>Raster</strong>: Representan celdas o pixeles, como una imagen satelital o un modelo de elevación.</li>
+</ul>
+<p>En este tutorial trabajaremos con datos <strong>vectoriales</strong>, porque los estados de México pueden representarse como polígonos.</p>
+</div>
+</div>
+</section>
+<section id="qué-es-un-sig" class="level2">
+<h2 class="anchored" data-anchor-id="qué-es-un-sig">¿Qué es un SIG?</h2>
+<p>Un <strong>Sistema de Información Geográfica (SIG)</strong> es un conjunto de herramientas que permite almacenar, organizar, analizar y visualizar datos que tienen una ubicación en el espacio. En palabras más simples, un SIG nos ayuda a trabajar con datos que <em>viven</em> en un mapa. Por ejemplo, con un SIG podríamos responder (visualmente) a preguntas como estas:</p>
+<ul>
+<li>¿En qué estados hay mayor acceso a internet?</li>
+<li>¿Qué municipios cuentan con mayor número de sucursales bancarias?</li>
+<li>¿Cómo cambian ciertos indicadores entre regiones del país?</li>
+</ul>
+<p>Tradicionalmente, estas tareas se realizan con programas especializados como QGIS o ArcGIS. Sin embargo, R también puede funcionar como un SIG muy potente, especialmente cuando queremos combinar análisis estadístico, limpieza de datos y visualización dentro del mismo flujo de trabajo.</p>
+</section>
+<section id="r-como-sig" class="level2">
+<h2 class="anchored" data-anchor-id="r-como-sig">R como SIG</h2>
+<p>Cuando usamos R como SIG, normalmente trabajamos con objetos espaciales que guardan dos cosas al mismo tiempo:</p>
+<ul>
+<li>un conjunto de atributos, es decir, información como nombres, claves o indicadores y</li>
+<li>una geometría, a saber, la forma y la ubicación espacial de cada observación.</li>
+</ul>
+<p>El paquete más importante para esto hoy en día es <code>{sf}</code>. Las siglas vienen de <strong>simple features</strong>, un estándar moderno para representar datos espaciales vectoriales. Una de sus ventajas es que un objeto <code>sf</code> se comporta de manera muy parecida a un <em>data frame</em>, así que muchas operaciones con <code>{dplyr}</code> funcionan de manera natural.</p>
+</section>
+<section id="shapefiles-y-geopackages" class="level2">
+<h2 class="anchored" data-anchor-id="shapefiles-y-geopackages">Shapefiles y GeoPackages</h2>
+<p>Antes de dibujar nuestro primer mapa, vale la pena entender los formatos en los que suelen venir los datos espaciales.</p>
+<section id="shapefile" class="level3">
+<h3 class="anchored" data-anchor-id="shapefile">Shapefile</h3>
+<p>El <strong>Shapefile</strong> es el formato más conocido en la comunidad geoespacial. Fue desarrollado por <a href="https://www.esri.com/">ESRI</a> y durante muchos años ha sido el formato <em>clásico</em> para compartir y trabajar con capas vectoriales. Sin embargo, hay algo importante que suele confundir a quienes empiezan: un Shapefile no es realmente un solo archivo. En realidad, es un conjunto de archivos que trabajan juntos.</p>
+<p>Los archivos más comunes son estos:</p>
+<ul>
+<li><code>.shp</code>: guarda la geometría;</li>
+<li><code>.shx</code>: guarda un índice de la geometría;</li>
+<li><code>.dbf</code>: guarda los atributos asociados en formato de tabla;</li>
+<li><code>.prj</code>: guarda el sistema de coordenadas.</li>
+</ul>
+<p>En términos estrictos, para que un shapefile funcione correctamente y conserve tanto la geometría como los atributos, al menos deben estar presentes los archivos <code>.shp</code>, <code>.shx</code> y <code>.dbf</code>. Sin embargo, en la práctica también conviene que esté presente el archivo <code>.prj</code>, porque sin él perdemos la referencia espacial del objeto y después pueden surgir problemas al intentar superponer esa capa con otras.</p>
+<p>Es decir, cuando alguien te comparte <em>un shapefile</em>, normalmente en realidad te está compartiendo varios archivos al mismo tiempo. Si falta alguno de los esenciales, es muy probable que la capa no pueda abrirse correctamente o que se abra con información incompleta.</p>
+</section>
+<section id="geopackage" class="level3">
+<h3 class="anchored" data-anchor-id="geopackage">GeoPackage</h3>
+<p>El <strong>GeoPackage</strong> o <strong>GPKG</strong> es un formato más moderno. Internamente está basado en <a href="https://sqlite.org/">SQLite</a> y fue diseñado como un estándar abierto para almacenar información geoespacial. Su principal ventaja es que todo queda guardado en <strong>un solo archivo</strong> con extensión <code>.gpkg</code>. Además, suele manejar mejor los nombres largos de variables, la codificación de texto y el almacenamiento de varias capas dentro del mismo archivo.</p>
+</section>
+<section id="cuál-conviene-usar" class="level3">
+<h3 class="anchored" data-anchor-id="cuál-conviene-usar">¿Cuál conviene usar?</h3>
+<p>Si necesitas máxima compatibilidad con software antiguo, el Shapefile sigue siendo útil. Empero, si estás empezando hoy y puedes elegir, el GeoPackage suele ser una mejor opción.</p>
+</section>
+</section>
+<section id="preparación-del-entorno-de-trabajo" class="level2">
+<h2 class="anchored" data-anchor-id="preparación-del-entorno-de-trabajo">Preparación del Entorno de trabajo</h2>
+<p>Para este tutorial podríamos utilizar como fuente de información geoespacial directamente el <a href="https://www.inegi.org.mx/app/biblioteca/ficha.html?upc=794551163061">Marco Geoestadístico 2025 del INEGI</a>, que es la fuente oficial de referencia para la cartografía geoestadística de México. Sin embargo, para un primer acercamiento considero que esa descarga puede resultar algo pesada (<strong>245 MB</strong>), especialmente si nuestro objetivo inicial es simplemente aprender a leer una capa vectorial, entender su estructura y construir un mapa coroplético por entidad federativa. Por esa razón, en este tutorial utilizaremos una alternativa también oficial: la capa de <strong>División política estatal 1:250000. 2010</strong> de <a href="http://geoportal.conabio.gob.mx/metadatos/doc/html/dest_2010gw.html">CONABIO</a>. Esta capa es mucho más ligera y suficiente para fines didácticos como los nuestros: el recurso en formato <strong>Shapefile (coordenadas geográficas)</strong> tiene un tamaño de <strong>8.8 MB</strong> comprimido, lo cual la vuelve una opción mucho más manejable para aprender.</p>
+<p>Ahora bien, nuestra variable de interés para el mapa coroplético será la <strong>pobreza</strong> por estado, definida de acuerdo con la <a href="https://www.coneval.org.mx/InformesPublicaciones/InformesPublicaciones/Documents/Metodologia-medicion-multidimensional-3er-edicion.pdf">tercera edición de la Metodología para la medición multidimensional de la pobreza</a> del extinto Consejo Nacional de Evaluación de la Política de Desarrollo Social (<a href="https://www.coneval.org.mx/Paginas/principal.aspx">CONEVAL</a>). El <a href="https://www.coneval.org.mx/Medicion/MP/paginas/ae_pobreza_2022.aspx">anexo estadístico 2016 - 2022</a> proporciona los datos de porcentaje de población en pobreza (moderada y extrema) por entidad federativa, que serán los que utilizaremos para nuestros mapas. Para obtener esta información, podemos ir a la página del anexo antes mencionado y simplemente darle clic al botón llamado <em>Anexo entidades federativas</em>, lo cual descargará un archivo <code>AE_estatal_2022.zip</code> que contiene un archivo Excel llamado <code>Anexo estad”stico entidades 2022.xlsx</code>.</p>
+<p>Una vez que ya tenemos claro qué información utilizaremos y de dónde obtendremos tanto la cartografía como la variable de interés, el siguiente paso es preparar nuestro entorno de trabajo en R. Para este tutorial utilizaremos seis paquetes principales:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) <span class="co"># para trabajar con datos espaciales</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># para manipular datos en general</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) <span class="co"># para transformar estructuras de datos</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi) <span class="co"># para manipular texto</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># para crear gráficos</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) <span class="co"># para leer nuestro archivo Excel</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El siguiente paso es importar los archivos que vamos a utilizar. Para simplificar el proceso, asumiré que tanto la carpeta que contiene el Shapefile extraída de <code>AE_estatal_2022.zip</code> llamada <code>dest_2010gw</code>, como el archivo de Excel se encuentran en la misma carpeta que el archivo <code>.R</code>, <code>.Rmd</code> o <code>.qmd</code> desde el cual estamos trabajando. Esta forma de organizar el proyecto es bastante útil cuando apenas estamos comenzando, porque nos permite leer los archivos directamente por su nombre, sin necesidad de escribir rutas más largas o complejas. Si quisieramos organizar nuestro proyecto de una manera más estructurada, podríamos crear subcarpetas como <code>data</code> para guardar nuestros archivos de datos, y entonces la ruta para leer el Shapefile sería algo así como <code>data/dest_2010gw/dest_2010gw.shp</code>, y para el Excel sería <code>data/Anexo estadístico entidades 2022.xlsx</code>. Sin embargo, para este tutorial mantendremos las cosas simples y asumiremos que ambos archivos están en la raíz del proyecto.</p>
+<p>Primero comenzaremos importando el Shapefile. Como ya se mencionó antes, aunque un Shapefile está compuesto por varios archivos, para leerlo en R basta con indicar la ruta del archivo <code>.shp</code>, siempre y cuando los demás componentes esenciales se encuentren en la misma carpeta. En nuestro caso, como la carpeta <code>dest_2010gw</code> está en la raíz del proyecto, podemos importarlo de la siguiente manera:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mapa_mexico <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"dest_2010gw/dest_2010gw.shp"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `dest_2010gw' from data source 
+  `/Users/ale_romero/Library/CloudStorage/OneDrive-CIDE/R/AlejandroRomeroG.github.io/blog/RComoSIG-Mapa/dest_2010gw/dest_2010gw.shp' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 1212 features and 8 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: -118.3665 ymin: 14.53496 xmax: -86.71074 ymax: 32.71873
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>Si todo salió bien, R nos mostrará en la consola un breve resumen del objeto espacial que acabamos de importar: el número de observaciones (features), el número de variables (fields), el tipo de geometría, la extensión espacial del objeto y el sistema de referencia de coordenadas. En este caso, veremos que, la capa se encuentra en el sistema <strong>WGS 84</strong>, uno de los más comunes para trabajar con información geográfica. Para inspeccionar con más detalle el objeto importado y sus atributos, basta con escribir su nombre:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mapa_mexico</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 1212 features and 8 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: -118.3665 ymin: 14.53496 xmax: -86.71074 ymax: 32.71873
+Geodetic CRS:  WGS 84
+First 10 features:
+           AREA    PERIMETER COV_ COV_ID         ENTIDAD    CAPITAL RASGO_GEOG
+1  7.171369e+10 2273088.5899    2      1 BAJA CALIFORNIA   Mexicali       &lt;NA&gt;
+2  4.778415e+05    3517.5845    3      2 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+3  4.242857e+04     916.2356    4      3 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+4  1.297501e+05    2259.5981    5      4 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+5  1.479776e+06    7917.4943    6      5 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+6  1.792021e+11 3759999.3858    7      6          SONORA Hermosillo       &lt;NA&gt;
+7  1.341048e+08   70456.4252    8      7 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+8  1.617167e+07   18779.8250    9      8 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+9  2.469928e+11 3119522.9908   10      9       CHIHUAHUA  Chihuahua       &lt;NA&gt;
+10 1.498113e+05    1522.8309   11     10 BAJA CALIFORNIA       &lt;NA&gt;       ISLA
+   NUM_EDO                       geometry
+1       02 POLYGON ((-117.0825 32.3816...
+2       02 POLYGON ((-117.2944 32.4341...
+3       02 POLYGON ((-117.2629 32.4233...
+4       02 POLYGON ((-117.2595 32.4148...
+5       02 POLYGON ((-117.2396 32.3907...
+6       26 POLYGON ((-114.8133 32.4925...
+7       02 POLYGON ((-114.7069 31.7452...
+8       02 POLYGON ((-114.6085 31.7284...
+9       08 POLYGON ((-108.7544 31.3346...
+10      02 POLYGON ((-116.0428 30.7120...</code></pre>
+</div>
+</div>
+<p>En este punto conviene detenernos un momento a observar qué acabamos de importar. Como puede verse, <code>mapa_mexico</code> no es un <em>data frame</em> cualquiera, sino un objeto de clase <code>sf</code>. Esto significa que, además de los atributos de cada entidad federativa, también contiene la geometría correspondiente a cada una de ellas. Entre las variables disponibles, la más importante para nuestros propósitos será <code>ENTIDAD</code>, ya que contiene el nombre de cada estado y nos servirá más adelante para unir la cartografía con la base de pobreza.</p>
+<p>Si queremos echar un primer vistazo visual a la cartografía, podemos graficar únicamente la geometría:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(mapa_mexico))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Este gráfico todavía es muy básico, pero nos permite comprobar rápidamente que la capa se importó correctamente y que la geometría de las entidades federativas luce razonable. El siguiente paso es importar el archivo de Excel que contiene la información de pobreza. Antes de leerlo, conviene revisar qué hojas contiene:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(<span class="st">"Anexo estad”stico entidades 2022.xlsx"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Contenido"                       "Estados Unidos Mexicanos"       
+ [3] "Aguascalientes"                  "Baja California"                
+ [5] "Baja California Sur"             "Campeche"                       
+ [7] "Coahuila de Zaragoza"            "Colima"                         
+ [9] "Chiapas"                         "Chihuahua"                      
+[11] "Ciudad de México"                "Durango"                        
+[13] "Guanajuato"                      "Guerrero"                       
+[15] "Hidalgo"                         "Jalisco"                        
+[17] "México"                          "Michoacán de Ocampo"            
+[19] "Morelos"                         "Nayarit"                        
+[21] "Nuevo León"                      "Oaxaca"                         
+[23] "Puebla"                          "Querétaro"                      
+[25] "Quintana Roo"                    "San Luis Potosí"                
+[27] "Sinaloa"                         "Sonora"                         
+[29] "Tabasco"                         "Tamaulipas"                     
+[31] "Tlaxcala"                        "Veracruz de Ignacio de la Llave"
+[33] "Yucatán"                         "Zacatecas"                      </code></pre>
+</div>
+</div>
+<p>Al hacer esto veremos que el archivo no contiene una sola tabla con toda la información junta, sino varias hojas: una de contenido, una para el total nacional y una hoja para cada entidad federativa. Esta estructura no es tan cómoda como una base rectangular tradicional, pero sigue siendo perfectamente utilizable. De hecho, nos permitirá construir nosotros mismos una pequeña base de datos estatal a partir de cada hoja. Para entender mejor cómo está organizado el archivo, podemos importar primero una sola hoja, por ejemplo la de <strong>Aguascalientes</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>aguascalientes_raw <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Anexo estad”stico entidades 2022.xlsx"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sheet =</span> <span class="st">"Aguascalientes"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="cn">FALSE</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>aguascalientes_raw</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 28 × 17
+   ...1       ...2  ...3  ...4      ...5    ...6 ...7  ...8  ...9   ...10  ...11
+   &lt;chr&gt;      &lt;lgl&gt; &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;lgl&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Medición … NA    &lt;NA&gt;  &lt;NA&gt;    NA       NA    &lt;NA&gt;  NA    &lt;NA&gt;    NA     NA  
+ 2 Porcentaj… NA    &lt;NA&gt;  &lt;NA&gt;    NA       NA    &lt;NA&gt;  NA    &lt;NA&gt;    NA     NA  
+ 3 &lt;NA&gt;       NA    Indi… Porc…   NA       NA    &lt;NA&gt;  NA    Mile…   NA     NA  
+ 4 &lt;NA&gt;       NA    &lt;NA&gt;  2016  2018     2020    2022… NA    2016  2018   2020  
+ 5 &lt;NA&gt;       NA    Pobr… &lt;NA&gt;    NA       NA    &lt;NA&gt;  NA    &lt;NA&gt;    NA     NA  
+ 6 &lt;NA&gt;       NA    Pobl… 28.9…   26.3     27.6  23.7… NA    381.…  361.   396. 
+ 7 &lt;NA&gt;       NA    Pobl… 26.7…   25.3     25.2  21.9… NA    352.…  347.   362. 
+ 8 &lt;NA&gt;       NA    Pobl… 2.21…    0.988    2.42 1.75… NA    29.2…   13.6   34.7
+ 9 &lt;NA&gt;       NA    Pobl… 25.1…   25.5     25.6  29.8… NA    330.…  351.   367. 
+10 &lt;NA&gt;       NA    Pobl… 11.5…   12.0     11.1  9.25… NA    152.…  165.   159. 
+# ℹ 18 more rows
+# ℹ 6 more variables: ...12 &lt;chr&gt;, ...13 &lt;lgl&gt;, ...14 &lt;chr&gt;, ...15 &lt;dbl&gt;,
+#   ...16 &lt;dbl&gt;, ...17 &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Si observamos esta hoja con cuidado, notaremos que la fila que nos interesa es la correspondiente a <strong>Población en situación de pobreza</strong>, mientras que las columnas que nos interesan son las de los años <strong>2016, 2018, 2020 y 2022</strong> dentro del bloque de porcentajes. Es decir, lo que haremos a continuación será repetir esta misma extracción para cada una de las hojas estatales. Primero obtenemos los nombres de todas las hojas y descartamos aquellas que no representan una entidad federativa:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hojas <span class="ot">&lt;-</span> <span class="fu">excel_sheets</span>(<span class="st">"Anexo estad”stico entidades 2022.xlsx"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>hojas_estados <span class="ot">&lt;-</span> hojas[<span class="sc">!</span>(hojas <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Contenido"</span>, <span class="st">"Estados Unidos Mexicanos"</span>))]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>hojas_estados</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Aguascalientes"                  "Baja California"                
+ [3] "Baja California Sur"             "Campeche"                       
+ [5] "Coahuila de Zaragoza"            "Colima"                         
+ [7] "Chiapas"                         "Chihuahua"                      
+ [9] "Ciudad de México"                "Durango"                        
+[11] "Guanajuato"                      "Guerrero"                       
+[13] "Hidalgo"                         "Jalisco"                        
+[15] "México"                          "Michoacán de Ocampo"            
+[17] "Morelos"                         "Nayarit"                        
+[19] "Nuevo León"                      "Oaxaca"                         
+[21] "Puebla"                          "Querétaro"                      
+[23] "Quintana Roo"                    "San Luis Potosí"                
+[25] "Sinaloa"                         "Sonora"                         
+[27] "Tabasco"                         "Tamaulipas"                     
+[29] "Tlaxcala"                        "Veracruz de Ignacio de la Llave"
+[31] "Yucatán"                         "Zacatecas"                      </code></pre>
+</div>
+</div>
+<p>Ahora construiremos una pequeña función que lea cada hoja estatal, localice la fila de <strong>Población en situación de pobreza</strong> y extraiga el porcentaje correspondiente a 2016, 2018, 2020 y 2022, respectivamente En este archivo, esa información se encuentra en la tercera columna para el nombre del indicador y en la cuarta, quinta, sexta y séptima columna para el porcentaje de los años ya mencionados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>extraer_pobreza <span class="ot">&lt;-</span> <span class="cf">function</span>(hoja) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  tabla <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Anexo estad”stico entidades 2022.xlsx"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> hoja,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">col_names =</span> <span class="cn">FALSE</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  fila_pobreza <span class="ot">&lt;-</span> <span class="fu">which</span>(tabla[[<span class="dv">3</span>]] <span class="sc">==</span> <span class="st">"Población en situación de pobreza"</span>)[<span class="dv">1</span>]</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">ENTIDAD =</span> hoja,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pobreza_2016 =</span> <span class="fu">as.numeric</span>(tabla[[<span class="dv">4</span>]][fila_pobreza]),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pobreza_2018 =</span> <span class="fu">as.numeric</span>(tabla[[<span class="dv">5</span>]][fila_pobreza]),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pobreza_2020 =</span> <span class="fu">as.numeric</span>(tabla[[<span class="dv">6</span>]][fila_pobreza]),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">pobreza_2022 =</span> <span class="fu">as.numeric</span>(tabla[[<span class="dv">7</span>]][fila_pobreza])</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Con esa función lista, ya podemos aplicarla a todas las hojas estatales y reunir el resultado en una sola base:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pobreza_estados <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(<span class="fu">lapply</span>(hojas_estados, extraer_pobreza))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>pobreza_estados</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           ENTIDAD pobreza_2016 pobreza_2018 pobreza_2020
+1                   Aguascalientes     28.94648     26.26541     27.62669
+2                  Baja California     22.60487     23.59869     22.51012
+3              Baja California Sur     22.88005     18.57216     27.60222
+4                         Campeche     45.66019     48.96430     50.54915
+5             Coahuila de Zaragoza     27.05571     25.50771     25.61704
+6                           Colima     32.53320     30.41075     26.69353
+7                          Chiapas     77.91276     77.99502     75.49129
+8                        Chihuahua     30.70164     26.64279     25.30499
+9                 Ciudad de México     26.59985     29.96781     32.60447
+10                         Durango     37.19312     38.78717     38.69167
+11                      Guanajuato     39.35110     41.48813     42.74239
+12                        Guerrero     66.82816     67.89002     66.40571
+13                         Hidalgo     56.90224     49.86971     50.75079
+14                         Jalisco     30.46840     27.80150     31.41550
+15                          México     46.64539     41.77450     48.86456
+16             Michoacán de Ocampo     54.16250     46.21151     44.50929
+17                         Morelos     46.69338     48.54414     50.94579
+18                         Nayarit     38.10435     35.72054     30.40544
+19                      Nuevo León     18.84034     19.38327     24.33040
+20                          Oaxaca     67.97761     64.33596     61.66425
+21                          Puebla     58.12609     58.00944     62.43210
+22                       Querétaro     29.68809     26.37347     31.32530
+23                    Quintana Roo     31.65285     30.19206     47.48029
+24                 San Luis Potosí     44.13719     42.06817     42.84615
+25                         Sinaloa     30.45804     30.98426     28.07140
+26                          Sonora     27.00777     26.66402     29.92402
+27                         Tabasco     53.84361     56.35136     54.47779
+28                      Tamaulipas     32.04342     34.54683     34.94246
+29                        Tlaxcala     55.93331     50.96552     59.28752
+30 Veracruz de Ignacio de la Llave     60.49191     60.15534     58.60315
+31                         Yucatán     45.50457     44.03003     49.48563
+32                       Zacatecas     50.19457     49.23215     45.77076
+   pobreza_2022
+1      23.72232
+2      13.37082
+3      13.32903
+4      45.12944
+5      18.24332
+6      20.54717
+7      67.37083
+8      17.57220
+9      23.96761
+10     34.31107
+11     33.03430
+12     60.35474
+13     40.99902
+14     21.83615
+15     42.87551
+16     41.73628
+17     41.05589
+18     29.31316
+19     16.04045
+20     58.44035
+21     54.01727
+22     21.69072
+23     26.96601
+24     35.52276
+25     21.63881
+26     21.69311
+27     46.47409
+28     26.82275
+29     52.51998
+30     51.73243
+31     38.77263
+32     44.21589</code></pre>
+</div>
+</div>
+<p>En este punto ya contamos con una base de datos mucho más cómoda para trabajar los datos de pobreza. <code>pobreza_estados</code> tiene una fila por entidad federativa y una columna para cada año de interés. A primera vista, podría parecer que ya estamos listos para unir esta tabla con la cartografía. Sin embargo, antes de hacerlo conviene verificar que los nombres de las entidades coincidan correctamente en ambas fuentes. Podemos revisar rápidamente los nombres únicos de cada base con las siguientes instrucciones:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">unique</span>(mapa_mexico<span class="sc">$</span>ENTIDAD))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "AGUASCALIENTES"                  "BAJA CALIFORNIA"                
+ [3] "BAJA CALIFORNIA SUR"             "CAMPECHE"                       
+ [5] "CHIAPAS"                         "CHIHUAHUA"                      
+ [7] "COAHUILA DE ZARAGOZA"            "COLIMA"                         
+ [9] "DISTRITO FEDERAL"                "DURANGO"                        
+[11] "GUANAJUATO"                      "GUERRERO"                       
+[13] "HIDALGO"                         "JALISCO"                        
+[15] "MEXICO"                          "MICHOACAN DE OCAMPO"            
+[17] "MORELOS"                         "NAYARIT"                        
+[19] "NUEVO LEON"                      "OAXACA"                         
+[21] "PUEBLA"                          "QUERETARO DE ARTEAGA"           
+[23] "QUINTANA ROO"                    "SAN LUIS POTOSI"                
+[25] "SINALOA"                         "SONORA"                         
+[27] "TABASCO"                         "TAMAULIPAS"                     
+[29] "TLAXCALA"                        "VERACRUZ DE IGNACIO DE LA LLAVE"
+[31] "YUCATAN"                         "ZACATECAS"                      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">unique</span>(pobreza_estados<span class="sc">$</span>ENTIDAD))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Aguascalientes"                  "Baja California"                
+ [3] "Baja California Sur"             "Campeche"                       
+ [5] "Chiapas"                         "Chihuahua"                      
+ [7] "Ciudad de México"                "Coahuila de Zaragoza"           
+ [9] "Colima"                          "Durango"                        
+[11] "Guanajuato"                      "Guerrero"                       
+[13] "Hidalgo"                         "Jalisco"                        
+[15] "México"                          "Michoacán de Ocampo"            
+[17] "Morelos"                         "Nayarit"                        
+[19] "Nuevo León"                      "Oaxaca"                         
+[21] "Puebla"                          "Querétaro"                      
+[23] "Quintana Roo"                    "San Luis Potosí"                
+[25] "Sinaloa"                         "Sonora"                         
+[27] "Tabasco"                         "Tamaulipas"                     
+[29] "Tlaxcala"                        "Veracruz de Ignacio de la Llave"
+[31] "Yucatán"                         "Zacatecas"                      </code></pre>
+</div>
+</div>
+<p>Si observamos ambas salidas con cuidado, veremos que los nombres no coinciden de forma exacta. Esto ocurre porque la cartografía de CONABIO utiliza mayúsculas, omite algunos acentos y además conserva nombres administrativos más antiguos, como <code>DISTRITO FEDERAL</code>; mientras que el archivo de pobreza usa nombres más recientes, como <code>Ciudad de México</code>. Para resolver este problema, crearemos una pequeña función que estandarice los nombres de las entidades en ambas bases.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>normalizar_entidad <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">stri_trans_general</span>(x, <span class="st">"Latin-ASCII"</span>) <span class="co"># Elimina acentos</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">toupper</span>(x) <span class="co"># Convierte a mayúsculas</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">trimws</span>(x) <span class="co"># Elimina espacios en blanco al inicio y al final</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">case_when</span>( <span class="co"># Reemplaza nombres específicos</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">==</span> <span class="st">"DISTRITO FEDERAL"</span> <span class="sc">~</span> <span class="st">"CIUDAD DE MEXICO"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">==</span> <span class="st">"QUERETARO DE ARTEAGA"</span> <span class="sc">~</span> <span class="st">"QUERETARO"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> x</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Aplicamos ahora esta función tanto a la cartografía como a la base de pobreza:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mapa_mexico <span class="ot">&lt;-</span> mapa_mexico <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ENTIDAD_STD =</span> <span class="fu">normalizar_entidad</span>(ENTIDAD))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>pobreza_estados <span class="ot">&lt;-</span> pobreza_estados <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ENTIDAD_STD =</span> <span class="fu">normalizar_entidad</span>(ENTIDAD))</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Con esto ya podemos unir ambas fuentes de información utilizando la nueva variable <code>ENTIDAD_STD</code> como llave:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mapa_pobreza <span class="ot">&lt;-</span> mapa_mexico <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    pobreza_estados <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(ENTIDAD_STD, pobreza_2016, pobreza_2018, pobreza_2020, pobreza_2022),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"ENTIDAD_STD"</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="construcción-de-mapas-coropléticos" class="level2">
+<h2 class="anchored" data-anchor-id="construcción-de-mapas-coropléticos">Construcción de mapas coropléticos</h2>
+<p>Ahora pasemos a la parte más visual del tutorial. Como ya tenemos la geometría de cada entidad y el porcentaje de población en pobreza para varios años dentro de un mismo objeto <code>sf</code>, podemos comenzar construyendo un primer mapa para 2016. La lógica de <code>{ggplot2}</code> en este caso es bastante simple: usaremos <code>geom_sf()</code> para dibujar las entidades federativas y asignaremos la variable <code>pobreza_2022</code> al argumento <code>fill</code>, que controla el color de relleno de cada polígono.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mapa_2016 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mapa_pobreza) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pobreza_2016), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"#FDFBF7"</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"#9158A2"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Pobreza (%)"</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Porcentaje de población en situación de pobreza por entidad federativa"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"México, 2016"</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuente: Elaboración propia con datos de CONEVAL y geometrías de CONABIO"</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>mapa_2016</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El resultado es ya un mapa coroplético funcional: cada estado aparece coloreado según su porcentaje de población en situación de pobreza. Los tonos más claros representan menores niveles de pobreza, mientras que los tonos más intensos corresponden a valores más altos. Una ventaja adicional de haber extraído los datos para más de un año es que podemos repetir este mismo procedimiento para 2018, 2020 o 2022, simplemente cambiando la variable utilizada en <code>fill</code>. Por ejemplo, para mapear 2022 bastaría con reemplazar <code>pobreza_2016</code> por <code>pobreza_2022</code> y cambiar el subtítulo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mapa_2022 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mapa_pobreza) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pobreza_2022), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"#FDFBF7"</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"#9158A2"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Pobreza (%)"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Porcentaje de población en situación de pobreza por entidad federativa"</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"México, 2022"</span>,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuente: Elaboración propia con datos de CONEVAL y geometrías de CONABIO"</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>mapa_2022</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-15-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A bote pronto, con fines de comparación, podríamos poner una imagen al lado de la otra en cualquier documento para sacar conclusiones. Sin embargo, estaríamos cometiendo un error común en la visualización de datos: comparar mapas coropléticos sin una escala de colores común. En el ejemplo anterior, cada mapa tiene su propia escala de colores, lo que puede llevar a interpretaciones erróneas. Por ejemplo, un estado que tenga el mismo porcentaje de población en situación de pobreza en ambos años podría aparecer con un color diferente si las escalas no son idénticas (los valores mínimos y máximos cambian), lo que podría hacer pensar que hubo un cambio cuando en realidad no lo hubo. Para evitar esto, es fundamental establecer una escala de colores común para todos los mapas que se quieran comparar.</p>
+<p>Para resolver este problema, primero debemos calcular un rango común de valores que abarque todos los años que queremos comparar. De esta manera, cada color representará exactamente el mismo nivel de pobreza en todos los mapas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>limites_pobreza <span class="ot">&lt;-</span> <span class="fu">range</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    mapa_pobreza<span class="sc">$</span>pobreza_2016,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    mapa_pobreza<span class="sc">$</span>pobreza_2018,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    mapa_pobreza<span class="sc">$</span>pobreza_2020,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    mapa_pobreza<span class="sc">$</span>pobreza_2022</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>limites_pobreza</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.32903 77.99502</code></pre>
+</div>
+</div>
+<p>En lugar de construir cada mapa por separado y luego intentar acomodarlos manualmente, una alternativa más elegante consiste en reorganizar la base de datos a un formato largo. Así, cada observación conservará su geometría, pero además tendrá una nueva variable que indique el año correspondiente. Esto nos permitirá utilizar <code>facet_wrap()</code> para generar los cuatro mapas dentro de una sola figura. Para esto, usaremos la función <code>pivot_longer()</code> del paquete <code>{tidyr}</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mapa_pobreza_largo <span class="ot">&lt;-</span> mapa_pobreza <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(geometry, pobreza_2016, pobreza_2018, pobreza_2020, pobreza_2022) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"pobreza_"</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"anio"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"pobreza"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">anio =</span> <span class="fu">factor</span>(</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>      anio,</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pobreza_2016"</span>, <span class="st">"pobreza_2018"</span>, <span class="st">"pobreza_2020"</span>, <span class="st">"pobreza_2022"</span>),</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"2016"</span>, <span class="st">"2018"</span>, <span class="st">"2020"</span>, <span class="st">"2022"</span>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Con esta nueva base ya podemos construir una sola imagen con los cuatro mapas en una disposición de 2 por 2: en la primera fila aparecerán 2016 y 2018, y en la segunda 2020 y 2022.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mapa_comparativo <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mapa_pobreza_largo) <span class="sc">+</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pobreza), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">low =</span> <span class="st">"#FDFBF7"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">high =</span> <span class="st">"#9158A2"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> limites_pobreza,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Pobreza (%)"</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>anio, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Porcentaje de población en situación de pobreza por entidad federativa"</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"México, 2016-2022"</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuente: Elaboración propia con datos de CONEVAL y geometrías de CONABIO"</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">14</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>mapa_comparativo</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-18-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>El resultado es una sola figura comparativa con una escala de colores común, una sola leyenda y un encabezado compartido. De esta manera, cualquier diferencia visual entre los paneles refleja cambios reales en la pobreza y no simples variaciones en la escala de color. Finalmente, para guardar la visualización como archivo de imagen utilizaremos la función <code>ggsave()</code>, que permite exportar objetos creados con <code>{ggplot2}</code> en distintos formatos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"mapa.png"</span>, <span class="at">plot =</span> mapa_comparativo,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si preferimos guardarla como JPG, basta con cambiar la extensión del archivo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"mapa.jpg"</span>, <span class="at">plot =</span> mapa_comparativo,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">bg =</span> <span class="st">"white"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En ambos casos, <code>width</code> y <code>height</code> controlan el tamaño de la imagen, mientras que <code>dpi</code> determina su resolución. Un valor de 300 en este último campo suele ser suficiente para obtener una imagen de buena calidad tanto en pantalla como en impresión.</p>
+</section>
+<section id="conclusión" class="level2">
+<h2 class="anchored" data-anchor-id="conclusión">Conclusión</h2>
+<p>A lo largo de este tutorial vimos que R puede utilizarse como un Sistema de Información Geográfica bastante potente. Primero entendimos qué es un SIG y repasamos la diferencia entre Shapefiles y GeoPackages, dos de los formatos vectoriales más comunes en el trabajo geoespacial. Después importamos una capa cartográfica, construimos una base de datos estatal de pobreza a partir de un archivo de Excel, estandarizamos nombres de entidades, unimos ambas fuentes y, finalmente, creamos un mapa coroplético comparativo para distintos años.</p>
+<p>Más allá de los mapas en sí, lo más importante aquí fue el flujo de trabajo que aprendimos: importar datos espaciales, limpiar datos tabulares, unir ambas fuentes y visualizarlas correctamente. Una vez entendido este proceso, resulta relativamente sencillo repetirlo con otras variables, otras escalas geográficas o incluso otras fuentes de información. En ese sentido, R no solo sirve para hacer mapas, sino para integrar análisis espacial y análisis de datos dentro de un mismo entorno de trabajo.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiado");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiado");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="AlejandroRomeroG/AlejandroRomeroG.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Copyright 2026, Alejandro Romero González</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>Este sitio web está construido con <a href="https://quarto.org/">Quarto</a></p>
+</div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","openEffect":"zoom","loop":false,"descPosition":"bottom"});
+window.onload = () => {
+  lightboxQuarto.on('slide_before_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    const href = trigger.getAttribute('href');
+    if (href !== null) {
+      const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+      if (imgEl !== null) {
+        const srcAttr = imgEl.getAttribute("src");
+        if (srcAttr && srcAttr.startsWith("data:")) {
+          slideConfig.href = srcAttr;
+        }
+      }
+    } 
+  });
+
+  lightboxQuarto.on('slide_after_load', (data) => {
+    const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+    if (window.Quarto?.typesetMath) {
+      window.Quarto.typesetMath(slideNode);
+    }
+  });
+
+};
+          </script>
+
+
+
+
+</body></html>
