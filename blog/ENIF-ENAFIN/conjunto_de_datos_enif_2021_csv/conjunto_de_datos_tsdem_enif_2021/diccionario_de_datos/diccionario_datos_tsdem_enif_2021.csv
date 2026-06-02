@@ -1,0 +1,15 @@
+﻿nombre_campo,longitud,tipo,nemónico,catálogo,rango_claves
+Número de folio,5,C,folio,,00001...13352
+Número de vivienda seleccionada,2,C,viv_sel,,01...25
+Número de hogar en la vivienda,1,C,hogar,,1...5
+Número de renglón,2,C,n_ren,,01...30
+Pregunta P2.3 ¿Qué es (NOMBRE) de la (del) jefa(e) del hogar?,1,C,p2_3,p2_3,1...6
+Pregunta SEXO (NOMBRE) es hombre (NOMBRE) es mujer,1,C,sexo,sexo,"1,2"
+Pregunta EDAD ¿Cuántos años cumplidos tiene (NOMBRE)?,2,C,edad,edad,00...99
+Pregunta NIV ¿Hasta qué año o grado aprobó (NOMBRE) en la escuela? - NIVEL,2,C,niv,niv,"00...09,99"
+Pregunta GRA ¿Hasta qué año o grado aprobó (NOMBRE) en la escuela? - GRADO,1,C,gra,,0...9
+Tamaño de localidad,1,C,tloc,tloc,1...4
+Región,1,C,region,region,1...6
+Estrato de diseño muestral,3,C,est_dis,,001...235
+UPM de diseño muestral,7,C,upm_dis,,0000001...0002013
+Factor de expansión,5,C,fac_hog,,00000...99999

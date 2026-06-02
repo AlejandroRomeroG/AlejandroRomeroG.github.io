@@ -1,0 +1,10 @@
+cve,descrip
+1,Transferencia electrónica
+2,Cargo automático a una cuenta o tarjeta (pago domiciliado)
+3,Tarjeta de débito
+4,Tarjeta de crédito
+5,Cheques
+6,Tarjeta prepagada
+7,Efectivo
+8,Otro
+9,No realiza esos pagos

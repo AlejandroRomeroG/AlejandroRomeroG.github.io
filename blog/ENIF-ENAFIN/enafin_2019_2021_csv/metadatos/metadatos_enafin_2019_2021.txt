@@ -1,0 +1,447 @@
+﻿
+identifier: MEX-INEGI.EEC3.05-ENAFIN-2021
+
+title: Encuesta Nacional de Financiamiento de las Empresas (ENAFIN) 2021, cifras definitivas.
+
+description: Recabar información estadística actualizada y confiable sobre las necesidades, fuentes y condiciones de acceso al financiamiento de las empresas privadas no financieras de México.
+
+Existen preguntas que se solicitaron al informante en porcentaje desde la captación de información, con estas preguntas para la agrupación de datos se tuvo que hacer el cálculo:
+
+En el caso de las variables en las que no se contaba con otra variable para su cálculo y se hizo un promedio simple, es decir, se sumó la variable en cuestión y se dividió entre el número de unidades:
+Variables (título de columnas en el conjunto de datos): 
+D_3a | P3A
+(2021-P3A)/total de unidades
+C_19 | P19
+(P19)/(P18_1)
+E_20 | P20_1
+SI P20=1: (P20_1)/(P18_0)
+G_20 | P20_1
+SI P20=2: (P20_1)/(P18_0)
+C_22 | P22
+(P22)/(P21)
+D_22 | P22
+(P22)/(P18_0)
+C_30_1 | P30_1_1
+(P30_1_1-P3A)/total de unidades
+D_30_1 | P30_1_2
+(P30_1_2-P3A)/total de unidades
+E_30_1 | P30_1_3
+(P30_1_3-P3A)/total de unidades
+F_30_1 | P30_1_4
+(P30_1_4-P3A)/total de unidades
+G_30_1 | P30_1_5
+(P30_1_5-P3A)/total de unidades
+H_30_1 | P30_1_6
+(P30_1_6-P3A)/total de unidades
+I_30_1 | P30_1_7
+(P30_1_7-P3A)/total de unidades
+J_30_1 | P30_1_9
+(P30_1_9-P3A)/total de unidades
+C_30_2 | P30_2_1
+(P30_2_1-P3A)/total de unidades
+D_30_2 | P30_2_2
+(P30_2_2-P3A)/total de unidades
+E_30_2 | P30_2_3
+(P30_2_3-P3A)/total de unidades
+F_30_2 | P30_2_4
+(P30_2_4-P3A)/total de unidades
+G_30_2 | P30_2_5
+(P30_2_5-P3A)/total de unidades
+H_30_2 | P30_2_6
+(P30_2_6-P3A)/total de unidades
+I_30_2 | P30_2_7
+(P30_2_7-P3A)/total de unidades
+J_30_2 | P30_2_9
+(P30_2_9-P3A)/total de unidades
+D_33_1 | P33_1C
+(P33_1C)/total de unidades
+E_33_1 | P33_1D
+(P33_1D)/total de unidades
+D_33_2 | P33_2C
+(P33_2C)/total de unidades
+E_33_2 | P33_2D
+(P33_2D)/total de unidades
+D_33_3 | P33_3C
+(P33_3C)/total de unidades
+E_33_3 | P33_3D
+(P33_3D)/total de unidades
+D_33_4 | P33_4C
+(P33_4C)/total de unidades
+E_33_4 | P33_4D
+(P33_4D)/total de unidades
+D_33_5 | P33_5C
+(P33_5C)/total de unidades
+E_33_5 | P33_5D
+(P33_5D)/total de unidades
+D_33_6 | P33_6C
+(P33_6C)/total de unidades
+E_33_6 | P33_6D
+(P33_6D)/total de unidades
+D_33_7 | P33_7C
+(P33_7C)/total de unidades
+E_33_7 | P33_7D
+(P33_7D)/total de unidades
+D_33_8 | P33_8C
+(P33_8C)/total de unidades
+E_33_8 | P33_8D
+(P33_8D)/total de unidades
+D_33_9 | P33_9C
+(P33_9C)/total de unidades
+E_33_9 | P33_9D
+(P33_9D)/total de unidades
+D_34_1 | P34_1C
+(P34_1C)/total de unidades
+E_34_1 | P34_1D
+(P34_1D)/total de unidades
+D_34_2 | P34_2C
+(P34_2C)/total de unidades
+E_34_2 | P34_2D
+(P34_2D)/total de unidades
+D_34_3 | P34_3C
+(P34_3C)/total de unidades
+E_34_3 | P34_3D
+(P34_3D)/total de unidades
+D_34_4 | P34_4C
+(P34_4C)/total de unidades
+E_34_4 | P34_4D
+(P34_4D)/total de unidades
+D_34_5 | P34_5C
+(P34_5C)/total de unidades
+E_34_5 | P34_5D
+(P34_5D)/total de unidades
+D_34_6 | P34_6C
+(P34_6C)/total de unidades
+E_34_6 | P34_6D
+(P34_6D)/total de unidades
+D_34_9 | P34_9C
+(P34_9C)/total de unidades
+E_34_9 | P34_9D
+(P34_9D)/total de unidades
+O_38_1_1 | P38_5A
+SI P38_1A=1: (P38_5A)/total de unidades
+P_38_1_1 | P38_6A
+SI P38_1A=1: (P38_6A)/total de unidades
+S_38_1_1 | P38_8A
+SI P38_1A=1: (P38_8A)/total de unidades
+T_38_1_1 | P38_11A
+SI P38_1A=1: (P38_11A)/total de unidades
+AR_38_1_1 | P38_16A
+SI P38_1A=1: (P38_16A)/total de unidades
+O_38_1_2 | P38_5B
+SI P38_1B=1: (P38_5B)/total de unidades
+P_38_1_2 | P38_6B
+SI P38_1B=1: (P38_6B)/total de unidades
+S_38_1_2 | P38_8B
+SI P38_1B=1: (P38_8B)/total de unidades
+T_38_1_2 | P38_11B
+SI P38_1B=1: (P38_11B)/total de unidades
+AR_38_1_2 | P38_16B
+SI P38_1B=1: (P38_16B)/total de unidades
+O_38_1_3 | P38_5C
+SI P38_1C=1: (P38_5C)/total de unidades
+P_38_1_3 | P38_6C
+SI P38_1C=1: (P38_6C)/total de unidades
+S_38_1_3 | P38_8C
+SI P38_1C=1: (P38_8C)/total de unidades
+T_38_1_3 | P38_11C
+SI P38_1C=1: (P38_11C)/total de unidades
+AR_38_1_3 | P38_16C
+SI P38_1C=1: (P38_16C)/total de unidades
+O_38_2_1 | P38_5A
+SI P38_1A=2: (P38_5A)/total de unidades
+P_38_2_1 | P38_6A
+SI P38_1A=2: (P38_6A)/total de unidades
+S_38_2_1 | P38_8A
+SI P38_1A=2: (P38_8A)/total de unidades
+T_38_2_1 | P38_11A
+SI P38_1A=2: (P38_11A)/total de unidades
+AR_38_2_1 | P38_16A
+SI P38_1A=2: (P38_16A)/total de unidades
+O_38_2_2 | P38_5B
+SI P38_1B=2: (P38_5B)/total de unidades
+P_38_2_2 | P38_6B
+SI P38_1B=2: (P38_6B)/total de unidades
+S_38_2_2 | P38_8B
+SI P38_1B=2: (P38_8B)/total de unidades
+T_38_2_2 | P38_11B
+SI P38_1B=2: (P38_11B)/total de unidades
+AR_38_2_2 | P38_16B
+SI P38_1B=2: (P38_16B)/total de unidades
+O_38_2_3 | P38_5C
+SI P38_1C=2: (P38_5C)/total de unidades
+P_38_2_3 | P38_6C
+SI P38_1C=2: (P38_6C)/total de unidades
+S_38_2_3 | P38_8C
+SI P38_1C=2: (P38_8C)/total de unidades
+T_38_2_3 | P38_11C
+SI P38_1C=2: (P38_11C)/total de unidades
+AR_38_2_3 | P38_16C
+SI P38_1C=2: (P38_16C)/total de unidades
+O_38_3_1 | P38_5A
+SI P38_1A=3: (P38_5A)/total de unidades
+P_38_3_1 | P38_6A
+SI P38_1A=3: (P38_6A)/total de unidades
+S_38_3_1 | P38_8A
+SI P38_1A=3: (P38_8A)/total de unidades
+T_38_3_1 | P38_11A
+SI P38_1A=3: (P38_11A)/total de unidades
+AR_38_3_1 | P38_16A
+SI P38_1A=3: (P38_16A)/total de unidades
+O_38_3_2 | P38_5B
+SI P38_1B=3: (P38_5B)/total de unidades
+P_38_3_2 | P38_6B
+SI P38_1B=3: (P38_6B)/total de unidades
+S_38_3_2 | P38_8B
+SI P38_1B=3: (P38_8B)/total de unidades
+T_38_3_2 | P38_11B
+SI P38_1B=3: (P38_11B)/total de unidades
+AR_38_3_2 | P38_16B
+SI P38_1B=3: (P38_16B)/total de unidades
+O_38_3_3 | P38_5C
+SI P38_1C=3: (P38_5C)/total de unidades
+P_38_3_3 | P38_6C
+SI P38_1C=3: (P38_6C)/total de unidades
+S_38_3_3 | P38_8C
+SI P38_1C=3: (P38_8C)/total de unidades
+T_38_3_3 | P38_11C
+SI P38_1C=3: (P38_11C)/total de unidades
+AR_38_3_3 | P38_16C
+SI P38_1C=3: (P38_16C)/total de unidades
+O_38_4_1 | P38_5A
+SI P38_1A=4: (P38_5A)/total de unidades
+P_38_4_1 | P38_6A
+SI P38_1A=4: (P38_6A)/total de unidades
+S_38_4_1 | P38_8A
+SI P38_1A=4: (P38_8A)/total de unidades
+T_38_4_1 | P38_11A
+SI P38_1A=4: (P38_11A)/total de unidades
+AR_38_4_1 | P38_16A
+SI P38_1A=4: (P38_16A)/total de unidades
+O_38_4_2 | P38_5B
+SI P38_1B=4: (P38_5B)/total de unidades
+P_38_4_2 | P38_6B
+SI P38_1B=4: (P38_6B)/total de unidades
+S_38_4_2 | P38_8B
+SI P38_1B=4: (P38_8B)/total de unidades
+T_38_4_2 | P38_11B
+SI P38_1B=4: (P38_11B)/total de unidades
+AR_38_4_2 | P38_16B
+SI P38_1B=4: (P38_16B)/total de unidades
+O_38_4_3 | P38_5C
+SI P38_1C=4: (P38_5C)/total de unidades
+P_38_4_3 | P38_6C
+SI P38_1C=4: (P38_6C)/total de unidades
+S_38_4_3 | P38_8C
+SI P38_1C=4: (P38_8C)/total de unidades
+T_38_4_3 | P38_11C
+SI P38_1C=4: (P38_11C)/total de unidades
+AR_38_4_3 | P38_16C
+SI P38_1C=4: (P38_16C)/total de unidades
+O_38_5_1 | P38_5A
+SI P38_1A=5: (P38_5A)/total de unidades
+P_38_5_1 | P38_6A
+SI P38_1A=5: (P38_6A)/total de unidades
+S_38_5_1 | P38_8A
+SI P38_1A=5: (P38_8A)/total de unidades
+T_38_5_1 | P38_11A
+SI P38_1A=5: (P38_11A)/total de unidades
+AR_38_5_1 | P38_16A
+SI P38_1A=5: (P38_16A)/total de unidades
+O_38_5_2 | P38_5B
+SI P38_1B=5: (P38_5B)/total de unidades
+P_38_5_2 | P38_6B
+SI P38_1B=5: (P38_6B)/total de unidades
+S_38_5_2 | P38_8B
+SI P38_1B=5: (P38_8B)/total de unidades
+T_38_5_2 | P38_11B
+SI P38_1B=5: (P38_11B)/total de unidades
+AR_38_5_2 | P38_16B
+SI P38_1B=5: (P38_16B)/total de unidades
+O_38_5_3 | P38_5C
+SI P38_1C=5: (P38_5C)/total de unidades
+P_38_5_3 | P38_6C
+SI P38_1C=5: (P38_6C)/total de unidades
+S_38_5_3 | P38_8C
+SI P38_1C=5: (P38_8C)/total de unidades
+T_38_5_3 | P38_11C
+SI P38_1C=5: (P38_11C)/total de unidades
+AR_38_5_3 | P38_16C
+SI P38_1C=5: (P38_16C)/total de unidades
+O_38_6_1 | P38_5A
+SI P38_1A=6: (P38_5A)/total de unidades
+P_38_6_1 | P38_6A
+SI P38_1A=6: (P38_6A)/total de unidades
+S_38_6_1 | P38_8A
+SI P38_1A=6: (P38_8A)/total de unidades
+T_38_6_1 | P38_11A
+SI P38_1A=6: (P38_11A)/total de unidades
+AR_38_6_1 | P38_16A
+SI P38_1A=6: (P38_16A)/total de unidades
+O_38_6_2 | P38_5B
+SI P38_1B=6: (P38_5B)/total de unidades
+P_38_6_2 | P38_6B
+SI P38_1B=6: (P38_6B)/total de unidades
+S_38_6_2 | P38_8B
+SI P38_1B=6: (P38_8B)/total de unidades
+T_38_6_2 | P38_11B
+SI P38_1B=6: (P38_11B)/total de unidades
+AR_38_6_2 | P38_16B
+SI P38_1B=6: (P38_16B)/total de unidades
+O_38_6_3 | P38_5C
+SI P38_1C=6: (P38_5C)/total de unidades
+P_38_6_3 | P38_6C
+SI P38_1C=6: (P38_6C)/total de unidades
+S_38_6_3 | P38_8C
+SI P38_1C=6: (P38_8C)/total de unidades
+T_38_6_3 | P38_11C
+SI P38_1C=6: (P38_11C)/total de unidades
+AR_38_6_3 | P38_16C
+SI P38_1C=6: (P38_16C)/total de unidades
+O_38_7_1 | P38_5A
+SI P38_1A=7: (P38_5A)/total de unidades
+P_38_7_1 | P38_6A
+SI P38_1A=7: (P38_6A)/total de unidades
+S_38_7_1 | P38_8A
+SI P38_1A=7: (P38_8A)/total de unidades
+T_38_7_1 | P38_11A
+SI P38_1A=7: (P38_11A)/total de unidades
+AR_38_7_1 | P38_16A
+SI P38_1A=7: (P38_16A)/total de unidades
+O_38_7_2 | P38_5B
+SI P38_1B=7: (P38_5B)/total de unidades
+P_38_7_2 | P38_6B
+SI P38_1B=7: (P38_6B)/total de unidades
+S_38_7_2 | P38_8B
+SI P38_1B=7: (P38_8B)/total de unidades
+T_38_7_2 | P38_11B
+SI P38_1B=7: (P38_11B)/total de unidades
+AR_38_7_2 | P38_16B
+SI P38_1B=7: (P38_16B)/total de unidades
+O_38_7_3 | P38_5C
+SI P38_1C=7: (P38_5C)/total de unidades
+P_38_7_3 | P38_6C
+SI P38_1C=7: (P38_6C)/total de unidades
+S_38_7_3 | P38_8C
+SI P38_1C=7: (P38_8C)/total de unidades
+T_38_7_3 | P38_11C
+SI P38_1C=7: (P38_11C)/total de unidades
+AR_38_7_3 | P38_16C
+SI P38_1C=7: (P38_16C)/total de unidades
+O_38_8_1 | P38_5A
+SI P38_1A=8: (P38_5A)/total de unidades
+P_38_8_1 | P38_6A
+SI P38_1A=8: (P38_6A)/total de unidades
+S_38_8_1 | P38_8A
+SI P38_1A=8: (P38_8A)/total de unidades
+T_38_8_1 | P38_11A
+SI P38_1A=8: (P38_11A)/total de unidades
+AR_38_8_1 | P38_16A
+SI P38_1A=8: (P38_16A)/total de unidades
+O_38_8_2 | P38_5B
+SI P38_1B=8: (P38_5B)/total de unidades
+P_38_8_2 | P38_6B
+SI P38_1B=8: (P38_6B)/total de unidades
+S_38_8_2 | P38_8B
+SI P38_1B=8: (P38_8B)/total de unidades
+T_38_8_2 | P38_11B
+SI P38_1B=8: (P38_11B)/total de unidades
+AR_38_8_2 | P38_16B
+SI P38_1B=8: (P38_16B)/total de unidades
+O_38_8_3 | P38_5C
+SI P38_1C=8: (P38_5C)/total de unidades
+P_38_8_3 | P38_6C
+SI P38_1C=8: (P38_6C)/total de unidades
+S_38_8_3 | P38_8C
+SI P38_1C=8: (P38_8C)/total de unidades
+T_38_8_3 | P38_11C
+SI P38_1C=8: (P38_11C)/total de unidades
+AR_38_8_3 | P38_16C
+SI P38_1C=8: (P38_16C)/total de unidades
+O_38_9_1 | P38_5A
+SI P38_1A=9: (P38_5A)/total de unidades
+P_38_9_1 | P38_6A
+SI P38_1A=9: (P38_6A)/total de unidades
+S_38_9_1 | P38_8A
+SI P38_1A=9: (P38_8A)/total de unidades
+T_38_9_1 | P38_11A
+SI P38_1A=9: (P38_11A)/total de unidades
+AR_38_9_1 | P38_16A
+SI P38_1A=9: (P38_16A)/total de unidades
+O_38_9_2 | P38_5B
+SI P38_1B=9: (P38_5B)/total de unidades
+P_38_9_2 | P38_6B
+SI P38_1B=9: (P38_6B)/total de unidades
+S_38_9_2 | P38_8B
+SI P38_1B=9: (P38_8B)/total de unidades
+T_38_9_2 | P38_11B
+SI P38_1B=9: (P38_11B)/total de unidades
+AR_38_9_2 | P38_16B
+SI P38_1B=9: (P38_16B)/total de unidades
+O_38_9_3 | P38_5C
+SI P38_1C=9: (P38_5C)/total de unidades
+P_38_9_3 | P38_6C
+SI P38_1C=9: (P38_6C)/total de unidades
+S_38_9_3 | P38_8C
+SI P38_1C=9: (P38_8C)/total de unidades
+T_38_9_3 | P38_11C
+SI P38_1C=9: (P38_11C)/total de unidades
+AR_38_9_3 | P38_16C
+SI P38_1C=9: (P38_16C)/total de unidades
+C_48 | P48
+(P48)/total de unidades
+C_54 | P54
+(P54-P3A)/total de unidades
+D_65_1 | P65_1B
+(P65_1B-P3A)/total de unidades
+D_65_2 | P65_2B
+(P65_2B-P3A)/total de unidades
+D_65_3 | P65_3B
+(P65_3B-P3A)/total de unidades
+D_65_4 | P65_4B
+(P65_4B-P3A)/total de unidades
+D_65_5 | P65_5B
+(P65_5B-P3A)/total de unidades
+D_65_6 | P65_6B
+(P65_6B-P3A)/total de unidades
+D_65_7 | P65_7B
+(P65_7B-P3A)/total de unidades
+D_65_8 | P65_8B
+(P65_8B-P3A)/total de unidades
+D_65_11 | P65_11B
+(P65_11B-P3A)/total de unidades
+D_65_12 | P65_12B
+(P65_12B-P3A)/total de unidades
+D_65a | (P65_1B,P65_2B,P65_3B,P65_4B,P65_5B,P65_6B,P65_7B,P65_8B,P65_11B,P65_12B)
+((P65_1B-P3A)+(P65_2B-P3A)+(P65_3B-P3A)+(P65_4B-P3A)+(P65_5B-P3A)+(P65_6B-P3A)+(P65_7B-P3A)+(P65_8B-P3A)+(P65_11B-P3A)+(P65_12B-P3A))/ total de unidades
+F_67a | P67_1B
+(P67_1B-P3A)/total de unidades
+G_67a | (P67_2B,P67_3B,P67_4B,P67_5B,P67_6B)
+((P67_2B-P3A)+(P67_3B-P3A)+(P67_4B-P3A)+(P67_5B-P3A)+(P67_6B-P3A))/total de unidades
+C_71 | P71
+(P71-P3A)/total de unidades
+C_76 | P76
+(P76-P3A)/total de unidades
+
+Nota: Para el caso de los campos en los que se registran espacios en blanco, no aplica el registro de información dado que la variable que representa el campo no se muestra para la clave correspondiente.
+
+modified: 2022-08-29
+
+publisher: Instituto Nacional de Estadística y Geografía, INEGI
+
+mbox: atencion.usuarios@inegi.org.mx
+
+license: https://www.inegi.org.mx/inegi/terminos.html
+
+dataDictionary: 
+
+keyword: "ENAFIN", "Micro", "Grandes", "Pequeñas", "Medianas", "Empresas", "Encuesta", "Industria", "Comercio", "Servicios"
+
+contactPoint: Mtro. J. Armando Aguiar Rodríguez, 800 111 4634
+
+temporal: 2019-2021
+
+spatial: Nacional, gran sector, tamaño de empresa, tamaño localidad
+
+accrualPeriodicity: Indeterminada
+
+distribution: https://www.inegi.org.mx/programas/enafin/2021

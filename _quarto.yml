@@ -7,6 +7,7 @@ project:
 
 website:
   title: "ARG"
+  site-url: "https://alejandroromerog.github.io"
   favicon: images/logos/logoB.png
   navbar:
     title: false
@@ -34,6 +35,4 @@ format:
       - tema_personalizado.scss
     mainfont: "Inter Tight"
     toc: true
-
-
 

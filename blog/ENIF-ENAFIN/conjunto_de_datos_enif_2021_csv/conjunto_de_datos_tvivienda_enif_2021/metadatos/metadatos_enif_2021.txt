@@ -1,0 +1,27 @@
+﻿Identifier: MEX-INEGI-ESD3.04-ENIF-2021
+
+Title: Encuesta Nacional de Inclusión Financiera (ENIF) 2021. Datos oportunos
+
+Description: La Encuesta Nacional de Inclusión Financiera (ENIF) 2021, es una encuesta donde el Instituto Nacional de Estadística y Geografía (INEGI) en colaboración con la Comisión Nacional Bancaria y de Valores (CNBV) llevaron a cabo el cuarto levantamiento, con el objetivo de continuar con la generación de información confiable sobre el acceso y uso de los servicios financieros para evaluar el avance en inclusión financiera en México.
+
+Modified: 2022-05-11
+
+Publisher: Instituto Nacional de Estadística y Geografía, INEGI
+
+Mbox: atencion.usuarios@inegi.org.mx
+
+License: https://www.inegi.org.mx/inegi/terminos.html
+
+DataDictionary: https://www.inegi.org.mx/rnm/index.php/catalog/759/data-dictionary
+
+Keyword: “actividad”, “ahorro”, “aseguradora”, “banca”, “beneficio”, “bienes”, “compra”, “crédito”, “dinero”, “divisa”, “empresa”, “financiación”, “garantía”, “gestión”, “ingreso”, “institución”, “inversión”, “patrimonio”, “recursos”, “remesas”, “servicio”, “seguro”
+
+ContactPoint: Mtro. J. Armando Aguiar Rodríguez, 800 111 4634
+
+Temporal: 2021-06-28-2021-08-13
+
+Spatial: Estados Unidos Mexicanos
+
+AccrualPeriodicity: No definida
+
+Distribution: https://www.inegi.org.mx/programas/enif/2021/

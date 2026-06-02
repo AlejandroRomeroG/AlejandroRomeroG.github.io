@@ -1,0 +1,12 @@
+cve,descrip
+0,Ninguno
+1,Preescolar o kínder
+2,Primaria
+3,Secundaria
+4,Estudios técnicos con secundaria terminada
+5,Normal básica
+6,Preparatoria o bachillerato
+7,Estudios técnicos con preparatoria terminada
+8,Licenciatura o ingeniería (profesional)
+9,Maestría o doctorado
+99,No sabe

@@ -1,0 +1,8 @@
+﻿nombre_campo,longitud,tipo,nemónico,catálogo,rango_claves
+"Número de folio","5","C","folio","","00001...13352"
+"Número de vivienda seleccionada","2","C","viv_sel","","01...25"
+"Número de hogar en la vivienda","1","C","hogar","","1...5"
+"Pregunta P2.8 ¿Cuántas personas de su hogar trabajan?","2","C","p2_8","","00...10"
+"Estrato de diseño muestral","3","C","est_dis","","001...235"
+"UPM de diseño muestral","7","C","upm_dis","","0000001...0002013"
+"Factor de expansión","5","C","fac_hog","","00262...17335"

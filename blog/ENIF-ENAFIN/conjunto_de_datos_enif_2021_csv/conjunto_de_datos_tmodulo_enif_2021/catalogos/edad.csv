@@ -1,0 +1,6 @@
+cve,descrip
+0,Menos de un año
+01...96,Años cumplidos
+97,97 años y más
+98,Edad no especificada en personas de 18 años y más
+99,Otra edad no especificada

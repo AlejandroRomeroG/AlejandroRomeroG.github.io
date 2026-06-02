@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.">
+<meta name="description" content="En este tutorial presento cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.">
 
 <title>ARG - Análisis de encuestas ENIF y ENAFIN</title>
 <style>
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -81,6 +115,35 @@ gtag('js', new Date());
 gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -135,7 +198,7 @@ gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
       <h1 class="title">Análisis de encuestas ENIF y ENAFIN</h1>
                   <div>
         <div class="description">
-          <p>Este tutorial detalla cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.</p>
+          <p>En este tutorial presento cómo descargar, procesar y visualizar datos de las Encuestas Nacionales de Inclusión Financiera (ENIF) y de Financiamiento de las Empresas (ENAFIN) utilizando R.</p>
         </div>
       </div>
                           <div class="quarto-categories">
@@ -143,6 +206,7 @@ gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
                 <div class="quarto-category">Tutorial</div>
                 <div class="quarto-category">Análisis de Datos</div>
                 <div class="quarto-category">Encuestas</div>
+                <div class="quarto-category">Visualización</div>
               </div>
                   </div>
   </div>
@@ -154,7 +218,7 @@ gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Fecha de publicación</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">5 de enero de 2024</p>
+        <p class="date">2 de junio de 2026</p>
       </div>
     </div>
     
@@ -173,13 +237,17 @@ gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
 
 
 
+<section id="introducción" class="level1">
+<h1>Introducción</h1>
+<p>Las encuestas oficiales son una de las fuentes más importantes para analizar fenómenos sociales y económicos, pero trabajar con ellas requiere más que solo abrir una base de datos y directamente calcular promedios. En este tutorial usaremos dos encuestas del Instituto Nacional de Estadística y Geografía (INEGI) relacionadas con el sistema financiero: la Encuesta Nacional de Inclusión Financiera (ENIF) y la Encuesta Nacional de Financiamiento de las Empresas (ENAFIN). A partir de ellas veremos cómo descargar sus datos abiertos, leer archivos CSV en R, construir variables de análisis, respetar el diseño muestral de una encuesta compleja con <code>{survey}</code> y <code>{srvyr}</code> y crear visualizaciones que comuniquen los resultados de forma clara.</p>
+</section>
 <section id="descarga-de-datos" class="level1">
 <h1>Descarga de datos</h1>
-<p>Antes de sumergirnos en el código, primero debemos obtener los datos. A continuación, te guiaré a través de los pasos para descargarlos del sitio oficial del Instituto Nacional de Estadística y Geografía (INEGI). Cabe destacar que, en este tutorial, utilizaremos solamente las versiones de 2021 de ambas encuestas; sin embargo, el procedimiento es casi el mismo para cualquier edición de las mismas.</p>
+<p>Antes de sumergirnos en el código, primero debemos obtener los datos. A continuación, te guiaré a través de los pasos para descargarlos del sitio oficial del INEGI. Cabe destacar que, en este tutorial, utilizaremos solamente las versiones de 2021 de ambas encuestas; sin embargo, el procedimiento es casi el mismo para cualquier edición de las mismas.</p>
 <p>En primer lugar, debemos ir al <a href="https://www.inegi.org.mx/">sitio web del INEGI</a> y buscar las encuestas ENIF y ENAFIN. Para ello, podemos utilizar el buscador que aparece en la página principal o simplemente hacer clic en los siguientes enlaces:</p>
 <ul>
-<li><a href="https://www.inegi.org.mx/programas/enif/2021/#datos_abiertos">Encuesta Nacional de Inclusión Financiera</a></li>
-<li><a href="https://www.inegi.org.mx/programas/enafin/2021/#datos_abiertos">Encuesta Nacional de Financiamiento de las Empresas</a></li>
+<li><a href="https://www.inegi.org.mx/programas/enif/2021/#datos_abiertos">Encuesta Nacional de Inclusión Financiera 2021</a></li>
+<li><a href="https://www.inegi.org.mx/programas/enafin/2021/#datos_abiertos">Encuesta Nacional de Financiamiento de las Empresas 2021</a></li>
 </ul>
 <p>Una vez que hayamos ingresado a la sección de <strong><em>Datos abiertos</em></strong> de cada encuesta, debemos cliquear estos botones que resalté con rectángulos rojos para iniciar las respectivas descargas:</p>
 <div style="display: flex; justify-content: center; align-items: center;">
@@ -203,9 +271,569 @@ gtag('config', 'G-YVC0YB78PW', { 'anonymize_ip': true});
 </section>
 <section id="procesamiento-de-datos" class="level1">
 <h1>Procesamiento de datos</h1>
-<p>Para empezar con el código, debemos de crear un nuevo archivo de R Markdown. Para ello, en RStudio, vamos a <em>File &gt; New File &gt; R Markdown…</em> y seleccionamos la opción <em>Create Empty Document</em>. Es una buena práctica guardar el archivo en la misma carpeta donde tenemos los datos de ambas encuestas, por lo que…</p>
-<p><br></p>
-<p><a href="en-construccion.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="en-construccion.png" class="img-fluid"></a></p>
+<p>Para empezar con el código, debemos crear un nuevo archivo de R Markdown o Quarto. En RStudio, podemos ir a <em>File &gt; New File &gt; R Markdown…</em> o <em>File &gt; New File &gt; Quarto Document…</em>, según el formato que prefiramos. Para mantener las cosas simples, conviene guardar ese archivo en la misma carpeta donde descomprimimos los datos de ambas encuestas. De esta manera, R podrá encontrar los archivos usando rutas relativas, sin necesidad de escribir la ruta completa de nuestra computadora.</p>
+<p>En lo que sigue asumiré que las carpetas descomprimidas conservan los nombres que vimos en las capturas de pantalla anteriores: <code>conjunto_de_datos_enif_2021_csv</code> para la ENIF y <code>enafin_2019_2021_csv</code> para la ENAFIN. Si tu computadora descomprimió los archivos de forma ligeramente distinta, solo tendrás que ajustar esas primeras partes de las rutas.</p>
+<p>En este tutorial utilizaremos siete paquetes. Los primeros nos servirán para leer archivos, manipular datos y hacer gráficas. Los dos últimos, <code>{survey}</code> y <code>{srvyr}</code>, son especialmente importantes porque nos permiten trabajar correctamente con encuestas que tienen diseño muestral complejo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Si aún no los tienes instalados, puedes usar:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("readr", "dplyr", "tidyr", "ggplot2", "scales", "survey", "srvyr"))</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># para leer archivos CSV</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># para manipular datos</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) <span class="co"># para transformar bases de datos</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># para crear gráficas</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># para formatear porcentajes en las gráficas</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survey) <span class="co"># para trabajar con diseños muestrales complejos</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(srvyr) <span class="co"># para usar survey con sintaxis parecida a dplyr</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La diferencia entre <code>{survey}</code> y <code>{srvyr}</code> no está en el objetivo, sino en la forma de escribir el código. <code>{survey}</code> es el paquete clásico para analizar encuestas complejas en R; <code>{srvyr}</code> construye sobre <code>{survey}</code> y permite escribir muchas de las mismas operaciones con una sintaxis más parecida a <code>{dplyr}</code>. En la práctica, conviene conocer ambos: <code>{survey}</code> es más general y muy usado en documentación técnica, mientras que <code>{srvyr}</code> resulta más cómodo cuando ya trabajamos con tuberías (<code>|&gt;</code> o <code>%&gt;%</code>), <code>group_by()</code> y <code>summarize()</code>.</p>
+<section id="lectura-de-la-enif" class="level2">
+<h2 class="anchored" data-anchor-id="lectura-de-la-enif">Lectura de la ENIF</h2>
+<p>Comenzaremos con la ENIF. Dentro de los archivos descomprimidos hay varias tablas, pero para este ejemplo trabajaremos con la tabla del módulo principal, llamada <code>conjunto_de_datos_tmodulo_enif_2021.csv</code>. La podemos leer de la siguiente manera:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ruta_enif <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"conjunto_de_datos_enif_2021_csv/"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"conjunto_de_datos_tmodulo_enif_2021/"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"conjunto_de_datos/"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"conjunto_de_datos_tmodulo_enif_2021.csv"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>enif_tmodulo <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  ruta_enif,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">guess_max =</span> <span class="cn">Inf</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En este caso usamos <code>guess_max = Inf</code> para que R revise todas las filas antes de decidir el tipo de cada columna. Esto evita que algunas variables codificadas con números se lean por error como variables lógicas (<code>TRUE</code>/<code>FALSE</code>). También usamos <code>show_col_types = FALSE</code> únicamente para ocultar el mensaje técnico que <code>{readr}</code> imprime al terminar la lectura.</p>
+<p>Una vez importada la tabla, podemos revisar rápidamente su tamaño, sus primeras filas y los nombres de algunas variables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(enif_tmodulo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13554   382</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>enif_tmodulo <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(FOLIO, VIV_SEL, HOGAR, N_REN, REGION, SEXO, EDAD, FAC_ELE) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  FOLIO VIV_SEL HOGAR N_REN REGION  SEXO  EDAD FAC_ELE
+  &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+1 00001 01          1 01         3     2    83    3807
+2 00002 02          1 01         3     2    33    1903
+3 00003 03          1 04         3     1    30    8897
+4 00004 04          1 01         3     2    64    5710
+5 00005 05          1 01         3     1    70   14236
+6 00006 01          1 04         3     2    20    5264</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(enif_tmodulo)[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>]</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "FOLIO"   "VIV_SEL" "HOGAR"   "N_REN"   "P3_1_1"  "P3_1_2"  "P3_2"   
+ [8] "P3_3"    "P3_4"    "P3_5"    "P3_6"    "P3_7"    "P3_8A"   "P3_8B"  
+[15] "P3_9"    "P3_10"   "P3_11"   "P4_1"    "P4_2_1"  "P4_2_2"  "P4_2_3" 
+[22] "P4_2_4"  "P4_2_5"  "P4_3"    "P4_4_1"  "P4_4_2"  "P4_4_3"  "P4_4_4" 
+[29] "P4_4_5"  "P4_4_6" </code></pre>
+</div>
+</div>
+<p>Las salidas nos confirman que el archivo fue importado correctamente. También nos permiten observar que la ENIF no es una base pequeña, pero tampoco es inmanejable. En esta tabla cada fila corresponde a una persona entrevistada y las columnas contienen tanto sus respuestas como variables necesarias para expandir correctamente los resultados a la población total. Para este primer ejemplo nos interesa construir una variable sencilla: si la persona tiene al menos una cuenta o producto financiero de los enlistados en las preguntas <code>P5_4_1</code> a <code>P5_4_9</code>.</p>
+<p>Estas variables preguntan, por ejemplo, si la persona tiene cuenta o tarjeta de nómina, cuenta de pensión, cuenta para recibir apoyos de gobierno, cuenta de ahorro, cuenta de cheques, depósito a plazo fijo, fondo de inversión, cuenta contratada por internet o alguna otra cuenta. Como todas usan el código <code>1</code> para “Sí” y <code>2</code> para “No”, podemos crear una variable indicadora que valga <code>1</code> si la persona respondió “Sí” en al menos una de ellas y <code>0</code> en caso contrario.</p>
+<p>Además, en el mismo bloque recodificaremos dos variables que usaremos para describir los resultados: <code>REGION</code> y <code>SEXO</code>. En la base original estas variables vienen como códigos numéricos; por ejemplo, <code>SEXO</code> usa <code>1</code> para hombres y <code>2</code> para mujeres. Para que las tablas y gráficas sean más fáciles de leer, las convertiremos a variables categóricas con etiquetas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>enif_tmodulo <span class="ot">&lt;-</span> enif_tmodulo <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tiene_cuenta =</span> <span class="fu">as.numeric</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">if_any</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">starts_with</span>(<span class="st">"P5_4_"</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">coalesce</span>(.x <span class="sc">==</span> <span class="dv">1</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">region =</span> <span class="fu">factor</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      REGION,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Noroeste"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Noreste"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Occidente y Bajío"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Ciudad de México"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Centro Sur y Oriente"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Sur"</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">sexo =</span> <span class="fu">factor</span>(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>      SEXO,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Después de crear <code>tiene_cuenta</code> y de recodificar variables de región y de sexo, podemos revisar algunas filas y columnas para comprobar que los cambios fueron aplicados como esperamos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>enif_tmodulo <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(region, sexo, P5_4_1, P5_4_2, P5_4_3, tiene_cuenta) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">8</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 6
+  region            sexo   P5_4_1 P5_4_2 P5_4_3 tiene_cuenta
+  &lt;fct&gt;             &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;
+1 Occidente y Bajío Mujer       2      2      1            1
+2 Occidente y Bajío Mujer       2      2      1            1
+3 Occidente y Bajío Hombre      2      2      2            0
+4 Occidente y Bajío Mujer       2      2      2            0
+5 Occidente y Bajío Hombre      2      2      1            1
+6 Occidente y Bajío Mujer       1      2      2            1
+7 Occidente y Bajío Mujer       2      1      2            1
+8 Occidente y Bajío Hombre      2      2      2            0</code></pre>
+</div>
+</div>
+<p>La variable <code>tiene_cuenta</code> queda codificada como una variable binaria: <code>1</code> si la persona tiene al menos una cuenta y <code>0</code> si no. Esto es útil porque el promedio de una variable binaria puede interpretarse como una proporción. Por ejemplo, si el promedio ponderado de <code>tiene_cuenta</code> fuera <code>0.55</code>, eso significaría que aproximadamente 55% de la población tiene al menos una cuenta.</p>
+<section id="diseño-muestral-pesos-estratos-y-unidades-primarias" class="level3">
+<h3 class="anchored" data-anchor-id="diseño-muestral-pesos-estratos-y-unidades-primarias">Diseño muestral: pesos, estratos y unidades primarias</h3>
+<p>Antes de calcular cualquier porcentaje, hay un punto metodológico importante. Las encuestas nacionales como la ENIF no suelen ser muestras aleatorias simples. De acuerdo con el <a href="https://www.inegi.org.mx/contenidos/productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/889463903888.pdf">diseño muestral de la ENIF 2021</a>, la muestra fue probabilística, trietápica, estratificada y por conglomerados, donde la unidad última de selección fueron las personas de 18 años y más. En términos prácticos, esto significa que primero se seleccionan unidades primarias de muestreo, después viviendas y finalmente una persona adulta dentro de la vivienda seleccionada. Por eso no basta con calcular promedios simples usando <code>mean()</code>.</p>
+<p>En la ENIF, tres variables son centrales para respetar ese diseño:</p>
+<ul>
+<li><code>FAC_ELE</code>: factor de expansión para la población de 18 años y más.</li>
+<li><code>UPM_DIS</code>: unidad primaria de muestreo.</li>
+<li><code>EST_DIS</code>: estrato de diseño.</li>
+</ul>
+<p>El <strong>factor de expansión</strong> indica cuántas personas de la población representa cada persona entrevistada. La intuición básica de un peso muestral parte de la probabilidad de inclusión: si <span class="math inline">\(\pi_i\)</span> es la probabilidad de inclusión de la persona <span class="math inline">\(i\)</span> en la muestra, un peso base puede escribirse como:</p>
+<p><span class="math display">\[
+w_i = \frac{1}{\pi_i}
+\]</span></p>
+<p>Así, una persona con peso <span class="math inline">\(w_i = 800\)</span> representa aproximadamente a 800 personas con características similares en la población. En la práctica, el factor final publicado por INEGI no se queda necesariamente en ese peso base: también puede incorporar ajustes por no respuesta y por proyección poblacional. Aun así, para estimar una proporción poblacional, la idea operativa sigue siendo la misma: no usamos el promedio simple de una variable binaria, sino una media ponderada:</p>
+<p><span class="math display">\[
+\hat{p} =
+\frac{\sum_{i \in s} w_i y_i}{\sum_{i \in s} w_i}
+\]</span></p>
+<p>donde <span class="math inline">\(y_i\)</span> vale <code>1</code> si la persona tiene la característica de interés y <code>0</code> si no la tiene. En nuestro caso, <span class="math inline">\(y_i\)</span> será la variable <code>tiene_cuenta</code>.</p>
+<p>La <strong>unidad primaria de muestreo</strong> (<code>UPM_DIS</code>) identifica los conglomerados que fueron seleccionados en la primera etapa del muestreo. En la documentación de INEGI, las UPM son agrupaciones de viviendas formadas de manera distinta según el ámbito urbano o rural. Esto importa porque las personas dentro de una misma unidad primaria pueden parecerse más entre sí que personas seleccionadas en lugares distintos. Si ignoramos esa dependencia, los errores estándar pueden quedar mal estimados.</p>
+<p>El <strong>estrato de diseño</strong> (<code>EST_DIS</code>) identifica grupos dentro de los cuales se seleccionaron unidades bajo condiciones similares. Incluir los estratos permite que R calcule la varianza de los estimadores de acuerdo con el diseño usado en la encuesta. En términos prácticos, los pesos entran tanto en las estimaciones puntuales como en el cálculo de la varianza; las unidades primarias y los estratos, por su parte, son indispensables para que los errores estándar, los intervalos de confianza y las pruebas estadísticas reflejen la estructura real del muestreo.</p>
+<p>Esta es la lógica general detrás del análisis de encuestas complejas con software especializado, como documenta Thomas Lumley en el paquete <a href="https://r-survey.r-forge.r-project.org/survey/example-design.html"><code>{survey}</code></a> y en su <a href="https://econpapers.repec.org/article/jssjstsof/v_3a009_3ai08.htm">artículo sobre el análisis de muestras complejas en R</a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Idea clave">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Idea clave
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Si usamos <code>mean(tiene_cuenta)</code>, tratamos a la ENIF como si fuera una muestra aleatoria simple y como si todas las personas entrevistadas representaran lo mismo. Si usamos el diseño muestral con <code>FAC_ELE</code>, <code>UPM_DIS</code> y <code>EST_DIS</code>, tratamos a la encuesta como lo que realmente es: una muestra compleja diseñada para representar a la población.</p>
+</div>
+</div>
+</section>
+<section id="estimaciones-con-el-paquete-survey" class="level3">
+<h3 class="anchored" data-anchor-id="estimaciones-con-el-paquete-survey">Estimaciones con el paquete survey</h3>
+<p>Antes de realizar cualquier cálculo, configuraremos una opción preventiva de <code>{survey}</code> para indicar cómo tratar estratos que tienen una sola unidad primaria de muestreo. En este ejemplo puede no ser indispensable, pero es una regla útil cuando después hacemos estimaciones para subgrupos o cortes específicos, donde sí podrían aparecer estratos con una sola UPM. La opción quedará activa durante toda la sesión de trabajo en R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">survey.lonely.psu =</span> <span class="st">"adjust"</span>) <span class="co"># regla preventiva para estratos con una sola UPM</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Con <code>{survey}</code>, necesitamos crear un objeto de diseño muestral para comenzar a trabajar. Este objeto le dice a R cuáles son los pesos, las unidades primarias y los estratos que debe usar en las estimaciones. Aunque el diseño completo de la ENIF es trietápico, en este tutorial declaramos la UPM de diseño que INEGI publica en los microdatos, que es una aproximación común cuando se analizan microdatos oficiales con variables de diseño:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>diseno_enif <span class="ot">&lt;-</span> <span class="fu">svydesign</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ids =</span> <span class="sc">~</span>UPM_DIS,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata =</span> <span class="sc">~</span>EST_DIS,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">weights =</span> <span class="sc">~</span>FAC_ELE,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> enif_tmodulo,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nest =</span> <span class="cn">TRUE</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El argumento <code>nest = TRUE</code> es útil cuando los identificadores de las unidades primarias pueden repetirse entre estratos. Con esto, R interpreta las unidades primarias como anidadas dentro de cada estrato. Asimismo, vale la pena notar el uso del símbolo <code>~</code> antes de <code>UPM_DIS</code>, <code>EST_DIS</code> y <code>FAC_ELE</code>. En este caso, <code>~</code> no significa “aproximadamente”; es la sintaxis de fórmulas de R. Si, por ejemplo, escribiéramos <code>weights = FAC_ELE</code>, R intentaría encontrar un objeto llamado <code>FAC_ELE</code> fuera de la base de datos y el código fallaría. En cambio, al escribir <code>weights = ~FAC_ELE</code>, le indicamos a <code>{survey}</code> que debe buscar esa variable dentro de <code>data = enif_tmodulo</code>. Lo mismo ocurre con <code>ids = ~UPM_DIS</code> y <code>strata = ~EST_DIS</code>.</p>
+<p>Ahora podemos estimar el porcentaje nacional de personas con al menos una cuenta:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">svymean</span>(<span class="sc">~</span>tiene_cuenta, diseno_enif, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mean     SE
+tiene_cuenta 0.50339 0.0073</code></pre>
+</div>
+</div>
+<p>El resultado nos devuelve la proporción estimada y, de manera predeterminada, su error estándar. En este caso, la estimación nacional es cercana a 50.3%, con un error estándar de 0.73%. También podemos calcular la misma estimación por región con <code>svyby()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>cuentas_region_survey <span class="ot">&lt;-</span> <span class="fu">svyby</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> <span class="sc">~</span>tiene_cuenta,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="sc">~</span>region,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">design =</span> diseno_enif,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">FUN =</span> svymean,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vartype =</span> <span class="st">"se"</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">porcentaje =</span> tiene_cuenta <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">error_estandar =</span> se <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>cuentas_region_survey</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                   region tiene_cuenta         se porcentaje
+Noroeste                         Noroeste    0.5839476 0.01424968   58.39476
+Noreste                           Noreste    0.5764684 0.01181391   57.64684
+Occidente y Bajío       Occidente y Bajío    0.5059088 0.01838211   50.59088
+Ciudad de México         Ciudad de México    0.6156021 0.01993839   61.56021
+Centro Sur y Oriente Centro Sur y Oriente    0.4421749 0.01605186   44.21749
+Sur                                   Sur    0.4390515 0.01654713   43.90515
+                     error_estandar
+Noroeste                   1.424968
+Noreste                    1.181391
+Occidente y Bajío          1.838211
+Ciudad de México           1.993839
+Centro Sur y Oriente       1.605186
+Sur                        1.654713</code></pre>
+</div>
+</div>
+<p>La salida de <code>svyby()</code> nos devuelve una fila por región. La columna <code>tiene_cuenta</code> contiene la proporción estimada, <code>se</code> contiene el error estándar y las dos últimas columnas expresan esos mismos valores en porcentaje.</p>
+<p>Este resultado ya es una tabla mucho más útil: contiene una estimación por región y, además, el error estándar correspondiente. Esa diferencia es importante porque no solo queremos saber cuál es el porcentaje estimado, sino también qué tan precisa es esa estimación.</p>
+</section>
+<section id="la-misma-estimación-con-srvyr" class="level3">
+<h3 class="anchored" data-anchor-id="la-misma-estimación-con-srvyr">La misma estimación con srvyr</h3>
+<p>Ahora hagamos el mismo cálculo usando <code>{srvyr}</code>. La ventaja es que la sintaxis se parece más al flujo normal de <code>{dplyr}</code>. Primero declararemos el diseño, luego agruparemos y resumiremos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>diseno_enif_srvyr <span class="ot">&lt;-</span> enif_tmodulo <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ids =</span> UPM_DIS,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> EST_DIS,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> FAC_ELE,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una vez creado el diseño, podemos estimar el porcentaje por región con <code>group_by()</code> y <code>summarize()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cuentas_region <span class="ot">&lt;-</span> diseno_enif_srvyr <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop_cuenta =</span> <span class="fu">survey_mean</span>(</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>      tiene_cuenta,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="st">"se"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">porcentaje =</span> prop_cuenta <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">error_estandar =</span> prop_cuenta_se <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>cuentas_region</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  region               prop_cuenta prop_cuenta_se porcentaje error_estandar
+  &lt;fct&gt;                      &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
+1 Noroeste                   0.584         0.0142       58.4           1.42
+2 Noreste                    0.576         0.0118       57.6           1.18
+3 Occidente y Bajío          0.506         0.0184       50.6           1.84
+4 Ciudad de México           0.616         0.0199       61.6           1.99
+5 Centro Sur y Oriente       0.442         0.0161       44.2           1.61
+6 Sur                        0.439         0.0165       43.9           1.65</code></pre>
+</div>
+</div>
+<p>La salida de <code>{srvyr}</code>, como podemos observar, es más compacta y conserva el formato de tibble.</p>
+<p>El resultado es equivalente al que obtuvimos con <code>{survey}</code>, pero escrito de una forma más cercana a la que solemos usar para manipular datos con <code>{dplyr}</code>. Para construir una visualización un poco más informativa, ahora repetiremos la estimación separando por región y sexo. Además del porcentaje estimado, le pediremos a <code>{srvyr}</code> que calcule intervalos de confianza de 95%, en lugar del error estándar:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>cuentas_region_sexo <span class="ot">&lt;-</span> diseno_enif_srvyr <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region, sexo) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">prop_cuenta =</span> <span class="fu">survey_mean</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>      tiene_cuenta,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">vartype =</span> <span class="st">"ci"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">porcentaje =</span> prop_cuenta <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">intervalo_inf =</span> prop_cuenta_low <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">intervalo_sup =</span> prop_cuenta_upp <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>cuentas_region_sexo</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 8
+   region           sexo  prop_cuenta prop_cuenta_low prop_cuenta_upp porcentaje
+   &lt;fct&gt;            &lt;fct&gt;       &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt;      &lt;dbl&gt;
+ 1 Noroeste         Homb…       0.646           0.605           0.687       64.6
+ 2 Noroeste         Mujer       0.525           0.492           0.558       52.5
+ 3 Noreste          Homb…       0.647           0.612           0.683       64.7
+ 4 Noreste          Mujer       0.509           0.478           0.541       50.9
+ 5 Occidente y Baj… Homb…       0.579           0.527           0.631       57.9
+ 6 Occidente y Baj… Mujer       0.438           0.400           0.476       43.8
+ 7 Ciudad de México Homb…       0.631           0.572           0.689       63.1
+ 8 Ciudad de México Mujer       0.603           0.551           0.655       60.3
+ 9 Centro Sur y Or… Homb…       0.545           0.502           0.588       54.5
+10 Centro Sur y Or… Mujer       0.354           0.317           0.390       35.4
+11 Sur              Homb…       0.468           0.430           0.506       46.8
+12 Sur              Mujer       0.414           0.375           0.453       41.4
+# ℹ 2 more variables: intervalo_inf &lt;dbl&gt;, intervalo_sup &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Con esta tabla ya podemos construir una gráfica de barras por región y sexo. Para facilitar la lectura, ordenaremos las regiones de acuerdo con el subgrupo que tenga el mayor porcentaje estimado dentro de cada región. Las etiquetas al final de cada barra muestran el porcentaje estimado, mientras que las barras de error muestran el intervalo de confianza de 95%:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>posicion_barras <span class="ot">&lt;-</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>limite_grafica_enif <span class="ot">&lt;-</span> <span class="fu">max</span>(cuentas_region_sexo<span class="sc">$</span>intervalo_sup, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="dv">7</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>orden_regiones <span class="ot">&lt;-</span> cuentas_region_sexo <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_porcentaje =</span> <span class="fu">max</span>(porcentaje, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(max_porcentaje) <span class="sc">|&gt;</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(region)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>cuentas_region_sexo_ordenado <span class="ot">&lt;-</span> cuentas_region_sexo <span class="sc">|&gt;</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">region_ordenada =</span> <span class="fu">factor</span>(region, <span class="at">levels =</span> orden_regiones)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>caption_enif <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Fuente: Elaboración propia con datos de la ENIF 2021, INEGI."</span>,</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">strwrap</span>(</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Nota: Se considera que una persona tiene cuenta si reporta al menos una cuenta o tarjeta de nómina, pensión, apoyos de gobierno, ahorro, cheques, depósito a plazo fijo, fondo de inversión, cuenta digital u otro producto similar (P5_4_1 a P5_4_9)."</span>,</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">width =</span> <span class="dv">95</span>), <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>grafica_enif <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>  cuentas_region_sexo_ordenado,</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> region_ordenada, <span class="at">y =</span> porcentaje, <span class="at">fill =</span> sexo)</span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> posicion_barras, <span class="at">width =</span> <span class="fl">0.68</span>) <span class="sc">+</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> intervalo_inf, <span class="at">ymax =</span> intervalo_sup),</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> posicion_barras,</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.25</span>,</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.5</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> intervalo_sup <span class="sc">+</span> <span class="fl">1.0</span>,</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">label_number</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">suffix =</span> <span class="st">"%"</span>)(porcentaje)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> posicion_barras,</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">"%"</span>),</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, limite_grafica_enif),</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">60</span>)</span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Hombre"</span> <span class="ot">=</span> <span class="st">"#1A6F7A"</span>,</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Mujer"</span> <span class="ot">=</span> <span class="st">"#D96C4A"</span></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"Mujer"</span>, <span class="st">"Hombre"</span>)</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Personas con al menos una cuenta en una institución financiera</span><span class="sc">\n</span><span class="st">por región y por sexo"</span>,</span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"ENIF 2021"</span>,</span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Porcentaje estimado"</span>,</span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> caption_enif</span>
+<span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb23-69"><a href="#cb23-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb23-70"><a href="#cb23-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb23-71"><a href="#cb23-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">lineheight =</span> <span class="fl">1.1</span>),</span>
+<span id="cb23-72"><a href="#cb23-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb23-73"><a href="#cb23-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="sc">-</span><span class="dv">200</span>)),</span>
+<span id="cb23-74"><a href="#cb23-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>),</span>
+<span id="cb23-75"><a href="#cb23-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-76"><a href="#cb23-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-77"><a href="#cb23-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb23-78"><a href="#cb23-78" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-79"><a href="#cb23-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-80"><a href="#cb23-80" aria-hidden="true" tabindex="-1"></a>grafica_enif</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La lectura de la gráfica anterior es directa: las barras más largas indican un mayor porcentaje estimado de personas con al menos una cuenta. Al separar por sexo, también podemos observar diferencias dentro de cada región. Lo importante es que esta gráfica no se construyó con conteos simples de la muestra, sino con estimaciones ponderadas que toman en cuenta el diseño muestral de la ENIF y que además muestran la incertidumbre de cada estimación mediante barras de error.</p>
+</section>
+</section>
+<section id="análisis-de-la-enafin" class="level2">
+<h2 class="anchored" data-anchor-id="análisis-de-la-enafin">Análisis de la ENAFIN</h2>
+<p>Pasemos ahora a la ENAFIN 2021. Aquí conviene hacer una distinción importante: el archivo de datos abiertos de esta encuesta no está organizado igual que el de la ENIF. Mientras que en la ENIF trabajamos con microdatos de personas entrevistadas, en la ENAFIN el archivo disponible contiene información ya agregada por dominios de estudio: tamaño de empresa, sector de actividad y tamaño de localidad.</p>
+<p>De igual manera, es importante tener claro el universo al que se refiere esta encuesta. La ENAFIN 2021 no representa a todas las empresas del país, sino a empresas con seis o más personas ocupadas en los sectores de construcción, manufacturas, comercio y servicios privados no financieros, ubicadas en localidades de 50,000 habitantes o más. Por lo tanto, las conclusiones de esta sección deben leerse dentro de ese universo específico.</p>
+<p>En esta parte no vamos a crear un objeto de diseño muestral con <code>{survey}</code> o <code>{srvyr}</code>. No porque los pesos no importen, sino porque el archivo que estamos usando ya contiene estimaciones agregadas. En este caso, nuestro trabajo consiste más bien en seleccionar las columnas relevantes, calcular porcentajes a partir de los totales disponibles y visualizar los resultados.</p>
+<p>Leemos primero el archivo CSV de la ENAFIN:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ruta_enafin <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"enafin_2019_2021_csv/"</span>,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"conjunto_de_datos/"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"enafin_2019_2021.csv"</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>enafin <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  ruta_enafin,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"NA"</span>, <span class="st">"*"</span>),</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>enafin <span class="sc">|&gt;</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(DOMINIO_ESTUDIO, C_1, D_8, Q_8, AD_8)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 11 × 5
+   DOMINIO_ESTUDIO                              C_1    D_8    Q_8   AD_8
+   &lt;chr&gt;                                      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 total                                    280489. 93562. 88306. 98621.
+ 2 grande                                    14219.  2057.  4382.  7779.
+ 3 mediana                                   19329.  3855.  7404.  8070.
+ 4 pequeña                                   98917. 32036. 34582. 32298.
+ 5 micro                                    148024. 55613. 41937. 50473.
+ 6 construcción                              11652.  3806.  3959.  3887.
+ 7 manufacturas                              44708. 14564. 14199. 15946.
+ 8 comercio                                  76181. 21180. 24995. 30006.
+ 9 servicios                                147948. 54012. 45154. 48782.
+10 Localidad de 500,000 y más habitantes    156861. 52427. 47028. 57406.
+11 Localidad de 50,000 a 499,999 habitantes 123628. 41135. 41278. 41215.</code></pre>
+</div>
+</div>
+<p>Aquí usamos <code>na = c("", "NA", "*")</code> porque en este archivo algunos valores no disponibles aparecen marcados con asterisco (<code>*</code>). Al indicarle eso a R desde la lectura, evitamos que columnas numéricas se interpreten como texto. Como salida, R nos muestra una tabla con el dominio de estudio y las variables que usaremos más adelante. Esta vista seleccionada evita imprimir todas las columnas del archivo, lo cual sería poco práctico para este tutorial.</p>
+<p>En el siguiente ejemplo analizaremos qué tanto afectó la falta de financiamiento a la operación de las empresas, comparando por el tamaño de las mismas. De acuerdo con el diccionario de datos, usaremos estas variables:</p>
+<ul>
+<li><code>C_1</code>: total de empresas en el dominio de estudio.</li>
+<li><code>D_8</code>: número de empresas a las que la falta de financiamiento afectó mucho.</li>
+<li><code>Q_8</code>: número de empresas a las que la falta de financiamiento afectó poco.</li>
+<li><code>AD_8</code>: número de empresas a las que la falta de financiamiento no afectó.</li>
+</ul>
+<p>Primero filtramos los dominios de tamaño de empresa y transformamos los conteos en porcentajes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>afectacion_financiamiento <span class="ot">&lt;-</span> enafin <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DOMINIO_ESTUDIO <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"micro"</span>, <span class="st">"pequeña"</span>, <span class="st">"mediana"</span>, <span class="st">"grande"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">tamano =</span> <span class="fu">factor</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      DOMINIO_ESTUDIO,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"micro"</span>, <span class="st">"pequeña"</span>, <span class="st">"mediana"</span>, <span class="st">"grande"</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Micro"</span>, <span class="st">"Pequeña"</span>, <span class="st">"Mediana"</span>, <span class="st">"Grande"</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Afectó mucho"</span> <span class="ot">=</span> D_8 <span class="sc">/</span> C_1 <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Afectó poco"</span> <span class="ot">=</span> Q_8 <span class="sc">/</span> C_1 <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"No afectó"</span> <span class="ot">=</span> AD_8 <span class="sc">/</span> C_1 <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span>tamano,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"respuesta"</span>,</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"porcentaje"</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">respuesta =</span> <span class="fu">factor</span>(</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>      respuesta,</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Afectó mucho"</span>, <span class="st">"Afectó poco"</span>, <span class="st">"No afectó"</span>)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>afectacion_financiamiento</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 3
+   tamano  respuesta    porcentaje
+   &lt;fct&gt;   &lt;fct&gt;             &lt;dbl&gt;
+ 1 Grande  Afectó mucho       14.5
+ 2 Grande  Afectó poco        30.8
+ 3 Grande  No afectó          54.7
+ 4 Mediana Afectó mucho       19.9
+ 5 Mediana Afectó poco        38.3
+ 6 Mediana No afectó          41.8
+ 7 Pequeña Afectó mucho       32.4
+ 8 Pequeña Afectó poco        35.0
+ 9 Pequeña No afectó          32.7
+10 Micro   Afectó mucho       37.6
+11 Micro   Afectó poco        28.3
+12 Micro   No afectó          34.1</code></pre>
+</div>
+</div>
+<p>El resultado queda en formato largo: una fila por combinación de tamaño de empresa y respuesta. Ahora podemos construir una gráfica de barras apiladas para comparar la distribución de respuestas por tamaño de empresa:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>grafica_enafin <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  afectacion_financiamiento,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> tamano, <span class="at">y =</span> porcentaje, <span class="at">fill =</span> respuesta)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">label_number</span>(<span class="at">accuracy =</span> <span class="fl">0.1</span>, <span class="at">suffix =</span> <span class="st">"%"</span>)(porcentaje)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">"%"</span>),</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Afectó mucho"</span> <span class="ot">=</span> <span class="st">"#9B2226"</span>,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Afectó poco"</span> <span class="ot">=</span> <span class="st">"#EE9B00"</span>,</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>      <span class="st">"No afectó"</span> <span class="ot">=</span> <span class="st">"#0A9396"</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Afectación por falta de financiamiento según tamaño de empresa"</span>,</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"ENAFIN 2021"</span>,</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tamaño de empresa"</span>,</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Porcentaje de empresas"</span>,</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="cn">NULL</span>,</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Fuente: Elaboración propia con datos de la ENAFIN 2021, INEGI.</span><span class="sc">\n</span><span class="st">Nota: Universo de empresas con seis o más personas ocupadas en localidades de 50,000 habitantes o más."</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>grafica_enafin</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-16-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La gráfica anterior ofrece una comparación descriptiva de las respuestas según el tamaño de la empresa. En particular, dentro del universo de la ENAFIN, las empresas micro y pequeñas muestran una proporción mayor en la categoría “Afectó mucho”, mientras que las empresas grandes concentran una mayor proporción en “No afectó”. Esta lectura es útil como primera exploración, pero no debe interpretarse como una prueba formal de diferencias entre grupos, ya que aquí estamos trabajando con tabulados agregados y no con intervalos de confianza o errores estándar para estas estimaciones.</p>
+</section>
+</section>
+<section id="guardar-las-gráficas" class="level1">
+<h1>Guardar las gráficas</h1>
+<p>Finalmente, si queremos guardar las gráficas que construimos con <code>{ggplot2}</code>, podemos usar <code>ggsave()</code>. Por ejemplo, para guardar la gráfica de la ENIF:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"enif_cuentas_region.png"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> grafica_enif,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">5</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">bg =</span> <span class="st">"white"</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Y para guardar la gráfica de la ENAFIN:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"enafin_financiamiento_tamano.png"</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> grafica_enafin,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">5</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">bg =</span> <span class="st">"white"</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En ambos casos, <code>width</code> y <code>height</code> controlan el tamaño de la imagen, mientras que <code>dpi</code> controla la resolución. Un valor de 300 suele ser suficiente para una imagen de buena calidad en pantalla y en documentos.</p>
+</section>
+<section id="conclusión" class="level1">
+<h1>Conclusión</h1>
+<p>En este tutorial vimos cómo descargar, leer y analizar información de la ENIF y la ENAFIN usando R. Con la ENIF trabajamos con microdatos, por lo que fue necesario declarar el diseño operativo con las variables públicas de diseño: pesos, estratos y unidades primarias de muestreo. También vimos dos formas de hacerlo: con <code>{survey}</code>, usando la sintaxis clásica, y con <code>{srvyr}</code>, usando una sintaxis más cercana a <code>{dplyr}</code>. Con la ENAFIN, en cambio, trabajamos con un archivo de datos agregados por dominios de estudio. Por eso el procesamiento fue distinto: únicamente seleccionamos las columnas en las que estabamos interesados, calculamos porcentajes y visualizamos diferencias por tamaño de empresa.</p>
+<p>La idea central es que no todas las encuestas se procesan igual. Cuando tenemos microdatos con diseño muestral, debemos incorporar pesos, estratos y conglomerados para obtener estimaciones adecuadas. En ambos casos, R nos permite construir un flujo de trabajo claro: leer datos, entender su estructura, transformar variables y comunicar resultados mediante visualizaciones.</p>
 
 
 </section>
@@ -614,7 +1242,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","openEffect":"zoom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"closeEffect":"zoom","descPosition":"bottom","selector":".lightbox"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
