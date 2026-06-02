@@ -15,8 +15,6 @@ website:
     right:
       - href: index.qmd
         text: Inicio
-      - href: about.qmd
-        text: Sobre mí
       - href: publications.qmd
         text: Publicaciones
       - href: blog.qmd
@@ -35,4 +33,3 @@ format:
       - tema_personalizado.scss
     mainfont: "Inter Tight"
     toc: true
-
