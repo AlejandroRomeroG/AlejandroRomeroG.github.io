@@ -2,6 +2,9 @@ project:
   type: website
   output-dir: docs
   post-render: ./post-build.sh
+  resources:
+    - includes/theme-toggle.css
+    - includes/theme-toggle.js
   preview:
     port: 7779
 
@@ -33,3 +36,4 @@ format:
       - tema_personalizado.scss
     mainfont: "Inter Tight"
     toc: true
+    include-in-header: includes/theme-toggle.html
