@@ -36,10 +36,64 @@
   --arg-callout-caution: #f0a46b;
   --arg-callout-warning: #d9b76e;
   --arg-callout-important: #ef8f8f;
+  --arg-theme-transition: 300ms ease;
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  #quarto-content,
+  #quarto-document-content,
+  main,
+  .navbar,
+  .navbar .nav-link,
+  .navbar-logo,
+  footer,
+  footer.footer,
+  .footer,
+  .nav-footer,
+  .nav-footer-left,
+  .nav-footer-center,
+  .nav-footer-right,
+  .nav-footer p,
+  a,
+  .btn,
+  .about-link,
+  .card,
+  .quarto-grid-item,
+  .listing-category,
+  .quarto-title-banner,
+  .aa-DetachedOverlay,
+  .aa-DetachedContainer,
+  .aa-DetachedFormContainer,
+  .aa-Panel,
+  .aa-PanelLayout,
+  .aa-SourceHeader,
+  .search-result-header,
+  .search-item,
+  .search-result-link,
+  div.callout,
+  div.callout .callout-header,
+  div.callout .callout-title-container,
+  div.callout .callout-body,
+  div.callout .callout-body-container,
+  code,
+  pre,
+  code span,
+  .sourceCode,
+  div.sourceCode,
+  pre.sourceCode,
+  .code-copy-button {
+    transition:
+      background-color var(--arg-theme-transition),
+      border-color var(--arg-theme-transition),
+      box-shadow var(--arg-theme-transition),
+      color var(--arg-theme-transition),
+      filter var(--arg-theme-transition);
+  }
 }
 
 .theme-toggle-item {
