@@ -145,6 +145,19 @@ html[data-theme="dark"] a {
   color: var(--arg-theme-dark-accent);
 }
 
+footer.footer .nav-footer a,
+.nav-footer a {
+  color: var(--arg-theme-accent) !important;
+  text-decoration: none;
+}
+
+footer.footer .nav-footer a:hover,
+footer.footer .nav-footer a:focus,
+.nav-footer a:hover,
+.nav-footer a:focus {
+  color: #744682 !important;
+}
+
 html[data-theme="dark"] .navbar,
 html[data-theme="dark"] footer,
 html[data-theme="dark"] footer.footer,
@@ -168,6 +181,18 @@ html[data-theme="dark"] .navbar .nav-link.active,
 html[data-theme="dark"] .navbar .nav-link:hover,
 html[data-theme="dark"] .navbar .nav-link:focus {
   color: var(--arg-theme-dark-accent) !important;
+}
+
+html[data-theme="dark"] footer.footer .nav-footer a,
+html[data-theme="dark"] .nav-footer a {
+  color: var(--arg-theme-dark-accent) !important;
+}
+
+html[data-theme="dark"] footer.footer .nav-footer a:hover,
+html[data-theme="dark"] footer.footer .nav-footer a:focus,
+html[data-theme="dark"] .nav-footer a:hover,
+html[data-theme="dark"] .nav-footer a:focus {
+  color: #ddb1ea !important;
 }
 
 html[data-theme="dark"] .navbar-logo {

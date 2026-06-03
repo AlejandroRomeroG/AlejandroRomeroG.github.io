@@ -12,7 +12,7 @@ about:
       href: https://www.linkedin.com/in/alejandro-romero-gonzález-103337211
     - icon: envelope
       text: Email
-      href: mailto:alejandro.romero@alumnos.cide.edu
+      href: mailto:a.romero.g.56@gmail.com
     - icon: twitter-x
       text: ~~Twitter~~
       href: https://twitter.com/ale_romero0
