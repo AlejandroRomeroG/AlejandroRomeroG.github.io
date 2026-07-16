@@ -9,7 +9,7 @@
 <link>https://alejandroromerog.github.io/blog.html</link>
 <atom:link href="https://alejandroromerog.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.4.549</generator>
+<generator>quarto-1.9.38</generator>
 <lastBuildDate>Tue, 02 Jun 2026 06:00:00 GMT</lastBuildDate>
 <item>
   <title>Análisis de encuestas ENIF y ENAFIN</title>
@@ -58,7 +58,7 @@
 <p>En lo que sigue asumiré que las carpetas descomprimidas conservan los nombres que vimos en las capturas de pantalla anteriores: <code>conjunto_de_datos_enif_2021_csv</code> para la ENIF y <code>enafin_2019_2021_csv</code> para la ENAFIN. Si tu computadora descomprimió los archivos de forma ligeramente distinta, solo tendrás que ajustar esas primeras partes de las rutas.</p>
 <p>En este tutorial utilizaremos siete paquetes. Los primeros nos servirán para leer archivos, manipular datos y hacer gráficas. Los dos últimos, <code>{survey}</code> y <code>{srvyr}</code>, son especialmente importantes porque nos permiten trabajar correctamente con encuestas que tienen diseño muestral complejo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Si aún no los tienes instalados, puedes usar:</span></span>
 <span id="cb1-2"><span class="co" style="color: #5E5E5E;
@@ -99,14 +99,14 @@ font-style: inherit;"># para trabajar con diseños muestrales complejos</span></
 background-color: null;
 font-style: inherit;">library</span>(srvyr) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># para usar survey con sintaxis parecida a dplyr</span></span></code></pre></div>
+font-style: inherit;"># para usar survey con sintaxis parecida a dplyr</span></span></code></pre></div></div>
 </div>
 <p>La diferencia entre <code>{survey}</code> y <code>{srvyr}</code> no está en el objetivo, sino en la forma de escribir el código. <code>{survey}</code> es el paquete clásico para analizar encuestas complejas en R; <code>{srvyr}</code> construye sobre <code>{survey}</code> y permite escribir muchas de las mismas operaciones con una sintaxis más parecida a <code>{dplyr}</code>. En la práctica, conviene conocer ambos: <code>{survey}</code> es más general y muy usado en documentación técnica, mientras que <code>{srvyr}</code> resulta más cómodo cuando ya trabajamos con tuberías (<code>|&gt;</code> o <code>%&gt;%</code>), <code>group_by()</code> y <code>summarize()</code>.</p>
 <section id="lectura-de-la-enif" class="level2">
 <h2 class="anchored" data-anchor-id="lectura-de-la-enif">Lectura de la ENIF</h2>
 <p>Comenzaremos con la ENIF. Dentro de los archivos descomprimidos hay varias tablas, pero para este ejemplo trabajaremos con la tabla del módulo principal, llamada <code>conjunto_de_datos_tmodulo_enif_2021.csv</code>. La podemos leer de la siguiente manera:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ruta_enif <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">ruta_enif <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -141,18 +141,18 @@ background-color: null;
 font-style: inherit;">show_col_types =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">FALSE</span></span>
-<span id="cb2-12">)</span></code></pre></div>
+<span id="cb2-12">)</span></code></pre></div></div>
 </div>
 <p>En este caso usamos <code>guess_max = Inf</code> para que R revise todas las filas antes de decidir el tipo de cada columna. Esto evita que algunas variables codificadas con números se lean por error como variables lógicas (<code>TRUE</code>/<code>FALSE</code>). También usamos <code>show_col_types = FALSE</code> únicamente para ocultar el mensaje técnico que <code>{readr}</code> imprime al terminar la lectura.</p>
 <p>Una vez importada la tabla, podemos revisar rápidamente su tamaño, sus primeras filas y los nombres de algunas variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">dim</span>(enif_tmodulo)</span></code></pre></div>
+font-style: inherit;">dim</span>(enif_tmodulo)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 13554   382</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">enif_tmodulo <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">enif_tmodulo <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb5-2">  <span class="fu" style="color: #4758AB;
@@ -162,7 +162,7 @@ background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb5-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">head</span>()</span></code></pre></div>
+font-style: inherit;">head</span>()</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 8
   FOLIO VIV_SEL HOGAR N_REN REGION  SEXO  EDAD FAC_ELE
@@ -174,7 +174,7 @@ font-style: inherit;">head</span>()</span></code></pre></div>
 5 00005 05          1 01         3     1    70   14236
 6 00006 01          1 04         3     2    20    5264</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(enif_tmodulo)[<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -182,7 +182,7 @@ font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">30</span>]</span></code></pre></div>
+font-style: inherit;">30</span>]</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "FOLIO"   "VIV_SEL" "HOGAR"   "N_REN"   "P3_1_1"  "P3_1_2"  "P3_2"   
  [8] "P3_3"    "P3_4"    "P3_5"    "P3_6"    "P3_7"    "P3_8A"   "P3_8B"  
@@ -195,7 +195,7 @@ font-style: inherit;">30</span>]</span></code></pre></div>
 <p>Estas variables preguntan, por ejemplo, si la persona tiene cuenta o tarjeta de nómina, cuenta de pensión, cuenta para recibir apoyos de gobierno, cuenta de ahorro, cuenta de cheques, depósito a plazo fijo, fondo de inversión, cuenta contratada por internet o alguna otra cuenta. Como todas usan el código <code>1</code> para “Sí” y <code>2</code> para “No”, podemos crear una variable indicadora que valga <code>1</code> si la persona respondió “Sí” en al menos una de ellas y <code>0</code> en caso contrario.</p>
 <p>Además, en el mismo bloque recodificaremos dos variables que usaremos para describir los resultados: <code>REGION</code> y <code>SEXO</code>. En la base original estas variables vienen como códigos numéricos; por ejemplo, <code>SEXO</code> usa <code>1</code> para hombres y <code>2</code> para mujeres. Para que las tablas y gráficas sean más fáciles de leer, las convertiremos a variables categóricas con etiquetas:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">enif_tmodulo <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">enif_tmodulo <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> enif_tmodulo <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -294,11 +294,11 @@ font-style: inherit;">"Hombre"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Mujer"</span>)</span>
 <span id="cb9-25">    )</span>
-<span id="cb9-26">  )</span></code></pre></div>
+<span id="cb9-26">  )</span></code></pre></div></div>
 </div>
 <p>Después de crear <code>tiene_cuenta</code> y de recodificar variables de región y de sexo, podemos revisar algunas filas y columnas para comprobar que los cambios fueron aplicados como esperamos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">enif_tmodulo <span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">enif_tmodulo <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb10-2">  <span class="fu" style="color: #4758AB;
@@ -310,7 +310,7 @@ font-style: inherit;">|&gt;</span></span>
 background-color: null;
 font-style: inherit;">head</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">8</span>)</span></code></pre></div>
+font-style: inherit;">8</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 8 × 6
   region            sexo   P5_4_1 P5_4_2 P5_4_3 tiene_cuenta
@@ -349,7 +349,7 @@ font-style: inherit;">8</span>)</span></code></pre></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Idea clave
+<span class="screen-reader-only">Tip</span>Idea clave
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -361,7 +361,7 @@ Idea clave
 <h3 class="anchored" data-anchor-id="estimaciones-con-el-paquete-survey">Estimaciones con el paquete survey</h3>
 <p>Antes de realizar cualquier cálculo, configuraremos una opción preventiva de <code>{survey}</code> para indicar cómo tratar estratos que tienen una sola unidad primaria de muestreo. En este ejemplo puede no ser indispensable, pero es una regla útil cuando después hacemos estimaciones para subgrupos o cortes específicos, donde sí podrían aparecer estratos con una sola UPM. La opción quedará activa durante toda la sesión de trabajo en R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">options</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -369,11 +369,11 @@ font-style: inherit;">survey.lonely.psu =</span> <span class="st" style="color: 
 background-color: null;
 font-style: inherit;">"adjust"</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># regla preventiva para estratos con una sola UPM</span></span></code></pre></div>
+font-style: inherit;"># regla preventiva para estratos con una sola UPM</span></span></code></pre></div></div>
 </div>
 <p>Con <code>{survey}</code>, necesitamos crear un objeto de diseño muestral para comenzar a trabajar. Este objeto le dice a R cuáles son los pesos, las unidades primarias y los estratos que debe usar en las estimaciones. Aunque el diseño completo de la ENIF es trietápico, en este tutorial declaramos la UPM de diseño que INEGI publica en los microdatos, que es una aproximación común cuando se analizan microdatos oficiales con variables de diseño:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">diseno_enif <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">diseno_enif <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -401,12 +401,12 @@ background-color: null;
 font-style: inherit;">nest =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span></span>
-<span id="cb13-7">)</span></code></pre></div>
+<span id="cb13-7">)</span></code></pre></div></div>
 </div>
 <p>El argumento <code>nest = TRUE</code> es útil cuando los identificadores de las unidades primarias pueden repetirse entre estratos. Con esto, R interpreta las unidades primarias como anidadas dentro de cada estrato. Asimismo, vale la pena notar el uso del símbolo <code>~</code> antes de <code>UPM_DIS</code>, <code>EST_DIS</code> y <code>FAC_ELE</code>. En este caso, <code>~</code> no significa “aproximadamente”; es la sintaxis de fórmulas de R. Si, por ejemplo, escribiéramos <code>weights = FAC_ELE</code>, R intentaría encontrar un objeto llamado <code>FAC_ELE</code> fuera de la base de datos y el código fallaría. En cambio, al escribir <code>weights = ~FAC_ELE</code>, le indicamos a <code>{survey}</code> que debe buscar esa variable dentro de <code>data = enif_tmodulo</code>. Lo mismo ocurre con <code>ids = ~UPM_DIS</code> y <code>strata = ~EST_DIS</code>.</p>
 <p>Ahora podemos estimar el porcentaje nacional de personas con al menos una cuenta:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">svymean</span>(<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -414,7 +414,7 @@ font-style: inherit;">~</span>tiene_cuenta, diseno_enif, <span class="at" style=
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
-font-style: inherit;">TRUE</span>)</span></code></pre></div>
+font-style: inherit;">TRUE</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                mean     SE
 tiene_cuenta 0.50339 0.0073</code></pre>
@@ -422,7 +422,7 @@ tiene_cuenta 0.50339 0.0073</code></pre>
 </div>
 <p>El resultado nos devuelve la proporción estimada y, de manera predeterminada, su error estándar. En este caso, la estimación nacional es cercana a 50.3%, con un error estándar de 0.73%. También podemos calcular la misma estimación por región con <code>svyby()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">cuentas_region_survey <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">cuentas_region_survey <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -480,7 +480,7 @@ background-color: null;
 font-style: inherit;">100</span></span>
 <span id="cb16-13">  )</span>
 <span id="cb16-14"></span>
-<span id="cb16-15">cuentas_region_survey</span></code></pre></div>
+<span id="cb16-15">cuentas_region_survey</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                   region tiene_cuenta         se porcentaje
 Noroeste                         Noroeste    0.5839476 0.01424968   58.39476
@@ -505,7 +505,7 @@ Sur                        1.654713</code></pre>
 <h3 class="anchored" data-anchor-id="la-misma-estimación-con-srvyr">La misma estimación con srvyr</h3>
 <p>Ahora hagamos el mismo cálculo usando <code>{srvyr}</code>. La ventaja es que la sintaxis se parece más al flujo normal de <code>{dplyr}</code>. Primero declararemos el diseño, luego agruparemos y resumiremos.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">diseno_enif_srvyr <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">diseno_enif_srvyr <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> enif_tmodulo <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -527,11 +527,11 @@ background-color: null;
 font-style: inherit;">nest =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span></span>
-<span id="cb18-7">  )</span></code></pre></div>
+<span id="cb18-7">  )</span></code></pre></div></div>
 </div>
 <p>Una vez creado el diseño, podemos estimar el porcentaje por región con <code>group_by()</code> y <code>summarize()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">cuentas_region <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">cuentas_region <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> diseno_enif_srvyr <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -583,7 +583,7 @@ background-color: null;
 font-style: inherit;">100</span></span>
 <span id="cb19-13">  )</span>
 <span id="cb19-14"></span>
-<span id="cb19-15">cuentas_region</span></code></pre></div>
+<span id="cb19-15">cuentas_region</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
   region               prop_cuenta prop_cuenta_se porcentaje error_estandar
@@ -599,7 +599,7 @@ font-style: inherit;">100</span></span>
 <p>La salida de <code>{srvyr}</code>, como podemos observar, es más compacta y conserva el formato de tibble.</p>
 <p>El resultado es equivalente al que obtuvimos con <code>{survey}</code>, pero escrito de una forma más cercana a la que solemos usar para manipular datos con <code>{dplyr}</code>. Para construir una visualización un poco más informativa, ahora repetiremos la estimación separando por región y sexo. Además del porcentaje estimado, le pediremos a <code>{srvyr}</code> que calcule intervalos de confianza de 95%, en lugar del error estándar:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">cuentas_region_sexo <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">cuentas_region_sexo <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> diseno_enif_srvyr <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -668,7 +668,7 @@ font-style: inherit;">|&gt;</span></span>
 background-color: null;
 font-style: inherit;">ungroup</span>()</span>
 <span id="cb21-17"></span>
-<span id="cb21-18">cuentas_region_sexo</span></code></pre></div>
+<span id="cb21-18">cuentas_region_sexo</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 8
    region           sexo  prop_cuenta prop_cuenta_low prop_cuenta_upp porcentaje
@@ -690,7 +690,7 @@ font-style: inherit;">ungroup</span>()</span>
 </div>
 <p>Con esta tabla ya podemos construir una gráfica de barras por región y sexo. Para facilitar la lectura, ordenaremos las regiones de acuerdo con el subgrupo que tenga el mayor porcentaje estimado dentro de cada región. Las etiquetas al final de cada barra muestran el porcentaje estimado, mientras que las barras de error muestran el intervalo de confianza de 95%:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">posicion_barras <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">posicion_barras <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1107,7 +1107,7 @@ background-color: null;
 font-style: inherit;">"bottom"</span></span>
 <span id="cb23-78">  )</span>
 <span id="cb23-79"></span>
-<span id="cb23-80">grafica_enif</span></code></pre></div>
+<span id="cb23-80">grafica_enif</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1126,7 +1126,7 @@ font-style: inherit;">"bottom"</span></span>
 <p>En esta parte no vamos a crear un objeto de diseño muestral con <code>{survey}</code> o <code>{srvyr}</code>. No porque los pesos no importen, sino porque el archivo que estamos usando ya contiene estimaciones agregadas. En este caso, nuestro trabajo consiste más bien en seleccionar las columnas relevantes, calcular porcentajes a partir de los totales disponibles y visualizar los resultados.</p>
 <p>Leemos primero el archivo CSV de la ENAFIN:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">ruta_enafin <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">ruta_enafin <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1171,7 +1171,7 @@ background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb24-14">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">select</span>(DOMINIO_ESTUDIO, C_1, D_8, Q_8, AD_8)</span></code></pre></div>
+font-style: inherit;">select</span>(DOMINIO_ESTUDIO, C_1, D_8, Q_8, AD_8)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 11 × 5
    DOMINIO_ESTUDIO                              C_1    D_8    Q_8   AD_8
@@ -1199,7 +1199,7 @@ font-style: inherit;">select</span>(DOMINIO_ESTUDIO, C_1, D_8, Q_8, AD_8)</span>
 </ul>
 <p>Primero filtramos los dominios de tamaño de empresa y transformamos los conteos en porcentajes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">afectacion_financiamiento <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">afectacion_financiamiento <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> enafin <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1337,7 +1337,7 @@ font-style: inherit;">"No afectó"</span>)</span>
 <span id="cb26-22">    )</span>
 <span id="cb26-23">  )</span>
 <span id="cb26-24"></span>
-<span id="cb26-25">afectacion_financiamiento</span></code></pre></div>
+<span id="cb26-25">afectacion_financiamiento</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 3
    tamano  respuesta    porcentaje
@@ -1358,7 +1358,7 @@ font-style: inherit;">"No afectó"</span>)</span>
 </div>
 <p>El resultado queda en formato largo: una fila por combinación de tamaño de empresa y respuesta. Ahora podemos construir una gráfica de barras apiladas para comparar la distribución de respuestas por tamaño de empresa:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">grafica_enafin <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">grafica_enafin <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1580,7 +1580,7 @@ background-color: null;
 font-style: inherit;">"bottom"</span></span>
 <span id="cb28-41">  )</span>
 <span id="cb28-42"></span>
-<span id="cb28-43">grafica_enafin</span></code></pre></div>
+<span id="cb28-43">grafica_enafin</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1596,7 +1596,7 @@ font-style: inherit;">"bottom"</span></span>
 <h1>Guardar las gráficas</h1>
 <p>Finalmente, si queremos guardar las gráficas que construimos con <code>{ggplot2}</code>, podemos usar <code>ggsave()</code>. Por ejemplo, para guardar la gráfica de la ENIF:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(</span>
 <span id="cb29-2">  <span class="at" style="color: #657422;
@@ -1627,11 +1627,11 @@ background-color: null;
 font-style: inherit;">bg =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"white"</span></span>
-<span id="cb29-8">)</span></code></pre></div>
+<span id="cb29-8">)</span></code></pre></div></div>
 </div>
 <p>Y para guardar la gráfica de la ENAFIN:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(</span>
 <span id="cb30-2">  <span class="at" style="color: #657422;
@@ -1662,7 +1662,7 @@ background-color: null;
 font-style: inherit;">bg =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"white"</span></span>
-<span id="cb30-8">)</span></code></pre></div>
+<span id="cb30-8">)</span></code></pre></div></div>
 </div>
 <p>En ambos casos, <code>width</code> y <code>height</code> controlan el tamaño de la imagen, mientras que <code>dpi</code> controla la resolución. Un valor de 300 suele ser suficiente para una imagen de buena calidad en pantalla y en documentos.</p>
 </section>
@@ -1703,7 +1703,7 @@ font-style: inherit;">"white"</span></span>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1766,7 +1766,7 @@ Nota
 <p>Ahora bien, nuestra variable de interés para el mapa coroplético será la <strong>pobreza</strong> por estado, definida de acuerdo con la <a href="https://www.coneval.org.mx/InformesPublicaciones/InformesPublicaciones/Documents/Metodologia-medicion-multidimensional-3er-edicion.pdf">tercera edición de la Metodología para la medición multidimensional de la pobreza</a> del extinto Consejo Nacional de Evaluación de la Política de Desarrollo Social (<a href="https://www.coneval.org.mx/Paginas/principal.aspx">CONEVAL</a>). El <a href="https://www.coneval.org.mx/Medicion/MP/paginas/ae_pobreza_2022.aspx">anexo estadístico 2016 - 2022</a> proporciona los datos de porcentaje de población en pobreza (moderada y extrema) por entidad federativa, que serán los que utilizaremos para nuestros mapas. Para obtener esta información, podemos ir a la página del anexo antes mencionado y simplemente darle clic al botón llamado <em>Anexo entidades federativas</em>, lo cual descargará un archivo <code>AE_estatal_2022.zip</code> que contiene un archivo Excel llamado <code>Anexo estad”stico entidades 2022.xlsx</code>.</p>
 <p>Una vez que ya tenemos claro qué información utilizaremos y de dónde obtendremos tanto la cartografía como la variable de interés, el siguiente paso es preparar nuestro entorno de trabajo en R. Para este tutorial utilizaremos seis paquetes principales:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(sf) <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1795,18 +1795,18 @@ font-style: inherit;"># para crear gráficos</span></span>
 background-color: null;
 font-style: inherit;">library</span>(readxl) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># para leer nuestro archivo Excel</span></span></code></pre></div>
+font-style: inherit;"># para leer nuestro archivo Excel</span></span></code></pre></div></div>
 </div>
 <p>El siguiente paso es importar los archivos que vamos a utilizar. Para simplificar el proceso, asumiré que tanto la carpeta que contiene el Shapefile extraída de <code>AE_estatal_2022.zip</code> llamada <code>dest_2010gw</code>, como el archivo de Excel se encuentran en la misma carpeta que el archivo <code>.R</code>, <code>.Rmd</code> o <code>.qmd</code> desde el cual estamos trabajando. Esta forma de organizar el proyecto es bastante útil cuando apenas estamos comenzando, porque nos permite leer los archivos directamente por su nombre, sin necesidad de escribir rutas más largas o complejas. Si quisiéramos organizar nuestro proyecto de una manera más estructurada, podríamos crear subcarpetas como <code>data</code> para guardar nuestros archivos de datos, y entonces la ruta para leer el Shapefile sería algo así como <code>data/dest_2010gw/dest_2010gw.shp</code>, y para el Excel sería <code>data/Anexo estadístico entidades 2022.xlsx</code>. Sin embargo, para este tutorial mantendremos las cosas simples y asumiremos que ambos archivos están en la raíz del proyecto.</p>
 <p>Primero comenzaremos importando el Shapefile. Como ya se mencionó antes, aunque un Shapefile está compuesto por varios archivos, para leerlo en R basta con indicar la ruta del archivo <code>.shp</code>, siempre y cuando los demás componentes esenciales se encuentren en la misma carpeta. En nuestro caso, como la carpeta <code>dest_2010gw</code> está en la raíz del proyecto, podemos importarlo de la siguiente manera:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">mapa_mexico <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">mapa_mexico <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">st_read</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"dest_2010gw/dest_2010gw.shp"</span>)</span></code></pre></div>
+font-style: inherit;">"dest_2010gw/dest_2010gw.shp"</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `dest_2010gw' from data source 
   `/Users/ale_romero/Library/CloudStorage/OneDrive-CIDE/R/AlejandroRomeroG.github.io/blog/RComoSIG-Mapa/dest_2010gw/dest_2010gw.shp' 
@@ -1820,7 +1820,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <p>Si todo salió bien, R nos mostrará en la consola un breve resumen del objeto espacial que acabamos de importar: el número de observaciones (features), el número de variables (fields), el tipo de geometría, la extensión espacial del objeto y el sistema de referencia de coordenadas. En este caso, veremos que la capa se encuentra en el sistema <strong>WGS 84</strong>, uno de los más comunes para trabajar con información geográfica. Para inspeccionar con más detalle el objeto importado y sus atributos, basta con escribir su nombre:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">mapa_mexico</span></code></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">mapa_mexico</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 1212 features and 8 fields
 Geometry type: POLYGON
@@ -1855,11 +1855,11 @@ First 10 features:
 <p>En este punto conviene detenernos un momento a observar qué acabamos de importar. Como puede verse, <code>mapa_mexico</code> no es un <em>data frame</em> cualquiera, sino un objeto de clase <code>sf</code>. Esto significa que, además de los atributos de cada entidad federativa, también contiene la geometría correspondiente a cada una de ellas. Entre las variables disponibles, la más importante para nuestros propósitos será <code>ENTIDAD</code>, ya que contiene el nombre de cada estado y nos servirá más adelante para unir la cartografía con la base de pobreza.</p>
 <p>Si queremos echar un primer vistazo visual a la cartografía, podemos graficar únicamente la geometría:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">st_geometry</span>(mapa_mexico))</span></code></pre></div>
+font-style: inherit;">st_geometry</span>(mapa_mexico))</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1870,11 +1870,11 @@ font-style: inherit;">st_geometry</span>(mapa_mexico))</span></code></pre></div>
 </div>
 <p>Este gráfico todavía es muy básico, pero nos permite comprobar rápidamente que la capa se importó correctamente y que la geometría de las entidades federativas luce razonable. El siguiente paso es importar el archivo de Excel que contiene la información de pobreza. Antes de leerlo, conviene revisar qué hojas contiene:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">excel_sheets</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Anexo estad”stico entidades 2022.xlsx"</span>)</span></code></pre></div>
+font-style: inherit;">"Anexo estad”stico entidades 2022.xlsx"</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Contenido"                       "Estados Unidos Mexicanos"       
  [3] "Aguascalientes"                  "Baja California"                
@@ -1897,7 +1897,7 @@ font-style: inherit;">"Anexo estad”stico entidades 2022.xlsx"</span>)</span></
 </div>
 <p>Al hacer esto veremos que el archivo no contiene una sola tabla con toda la información junta, sino varias hojas: una de contenido, una para el total nacional y una hoja para cada entidad federativa. Esta estructura no es tan cómoda como una base rectangular tradicional, pero sigue siendo perfectamente utilizable. De hecho, nos permitirá construir nosotros mismos una pequeña base de datos estatal a partir de cada hoja. Para entender mejor cómo está organizado el archivo, podemos importar primero una sola hoja, por ejemplo la de <strong>Aguascalientes</strong>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">aguascalientes_raw <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">aguascalientes_raw <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1917,7 +1917,7 @@ background-color: null;
 font-style: inherit;">FALSE</span></span>
 <span id="cb9-5">)</span>
 <span id="cb9-6"></span>
-<span id="cb9-7">aguascalientes_raw</span></code></pre></div>
+<span id="cb9-7">aguascalientes_raw</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 28 × 17
    ...1       ...2  ...3  ...4      ...5    ...6 ...7  ...8  ...9   ...10  ...11
@@ -1939,7 +1939,7 @@ font-style: inherit;">FALSE</span></span>
 </div>
 <p>Si observamos esta hoja con cuidado, notaremos que la fila que nos interesa es la correspondiente a <strong>Población en situación de pobreza</strong>, mientras que las columnas que nos interesan son las de los años <strong>2016, 2018, 2020 y 2022</strong> dentro del bloque de porcentajes. Es decir, lo que haremos a continuación será repetir esta misma extracción para cada una de las hojas estatales. Primero obtenemos los nombres de todas las hojas y descartamos aquellas que no representan una entidad federativa:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">hojas <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">hojas <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1961,7 +1961,7 @@ font-style: inherit;">"Contenido"</span>, <span class="st" style="color: #20794D
 background-color: null;
 font-style: inherit;">"Estados Unidos Mexicanos"</span>))]</span>
 <span id="cb11-4"></span>
-<span id="cb11-5">hojas_estados</span></code></pre></div>
+<span id="cb11-5">hojas_estados</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Aguascalientes"                  "Baja California"                
  [3] "Baja California Sur"             "Campeche"                       
@@ -1983,10 +1983,11 @@ font-style: inherit;">"Estados Unidos Mexicanos"</span>))]</span>
 </div>
 <p>Ahora construiremos una pequeña función que lea cada hoja estatal, localice la fila de <strong>Población en situación de pobreza</strong> y extraiga el porcentaje correspondiente a 2016, 2018, 2020 y 2022, respectivamente. En este archivo, esa información se encuentra en la tercera columna para el nombre del indicador y en la cuarta, quinta, sexta y séptima columna para el porcentaje de los años ya mencionados.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">extraer_pobreza <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">extraer_pobreza <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(hoja) {</span>
 <span id="cb13-2">  tabla <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2055,11 +2056,11 @@ font-style: inherit;">as.numeric</span>(tabla[[<span class="dv" style="color: #A
 background-color: null;
 font-style: inherit;">7</span>]][fila_pobreza])</span>
 <span id="cb13-16">  )</span>
-<span id="cb13-17">}</span></code></pre></div>
+<span id="cb13-17">}</span></code></pre></div></div>
 </div>
 <p>Con esa función lista, ya podemos aplicarla a todas las hojas estatales y reunir el resultado en una sola base:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">pobreza_estados <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">pobreza_estados <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2067,7 +2068,7 @@ font-style: inherit;">bind_rows</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">lapply</span>(hojas_estados, extraer_pobreza))</span>
 <span id="cb14-2"></span>
-<span id="cb14-3">pobreza_estados</span></code></pre></div>
+<span id="cb14-3">pobreza_estados</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           ENTIDAD pobreza_2016 pobreza_2018 pobreza_2020
 1                   Aguascalientes     28.94648     26.26541     27.62669
@@ -2139,13 +2140,13 @@ font-style: inherit;">lapply</span>(hojas_estados, extraer_pobreza))</span>
 </div>
 <p>En este punto ya contamos con una base de datos mucho más cómoda para trabajar los datos de pobreza. <code>pobreza_estados</code> tiene una fila por entidad federativa y una columna para cada año de interés. A primera vista, podría parecer que ya estamos listos para unir esta tabla con la cartografía. Sin embargo, antes de hacerlo conviene verificar que los nombres de las entidades coincidan correctamente en ambas fuentes. Podemos revisar rápidamente los nombres únicos de cada base con las siguientes instrucciones:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sort</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>(mapa_mexico<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div>
+font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "AGUASCALIENTES"                  "BAJA CALIFORNIA"                
  [3] "BAJA CALIFORNIA SUR"             "CAMPECHE"                       
@@ -2164,13 +2165,13 @@ font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div>
 [29] "TLAXCALA"                        "VERACRUZ DE IGNACIO DE LA LLAVE"
 [31] "YUCATAN"                         "ZACATECAS"                      </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sort</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>(pobreza_estados<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div>
+font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Aguascalientes"                  "Baja California"                
  [3] "Baja California Sur"             "Campeche"                       
@@ -2192,10 +2193,11 @@ font-style: inherit;">$</span>ENTIDAD))</span></code></pre></div>
 </div>
 <p>Si observamos ambas salidas con cuidado, veremos que los nombres no coinciden de forma exacta. Esto ocurre porque la cartografía de CONABIO utiliza mayúsculas, omite algunos acentos y además conserva nombres administrativos más antiguos, como <code>DISTRITO FEDERAL</code>; mientras que el archivo de pobreza usa nombres más recientes, como <code>Ciudad de México</code>. Para resolver este problema, crearemos una pequeña función que estandarice los nombres de las entidades en ambas bases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">normalizar_entidad <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">normalizar_entidad <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(x) {</span>
 <span id="cb20-2">  x <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2256,11 +2258,11 @@ font-style: inherit;">~</span> x</span>
 <span id="cb20-12">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">return</span>(x)</span>
-<span id="cb20-13">}</span></code></pre></div>
+<span id="cb20-13">}</span></code></pre></div></div>
 </div>
 <p>Aplicamos ahora esta función tanto a la cartografía como a la base de pobreza:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">mapa_mexico <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">mapa_mexico <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mapa_mexico <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2284,11 +2286,11 @@ font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ENTIDAD_STD =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">normalizar_entidad</span>(ENTIDAD))</span></code></pre></div>
+font-style: inherit;">normalizar_entidad</span>(ENTIDAD))</span></code></pre></div></div>
 </div>
 <p>Con esto ya podemos unir ambas fuentes de información utilizando la nueva variable <code>ENTIDAD_STD</code> como llave:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">mapa_pobreza <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">mapa_pobreza <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mapa_mexico <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2307,14 +2309,14 @@ background-color: null;
 font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"ENTIDAD_STD"</span></span>
-<span id="cb22-6">  )</span></code></pre></div>
+<span id="cb22-6">  )</span></code></pre></div></div>
 </div>
 </section>
 <section id="construcción-de-mapas-coropléticos" class="level2">
 <h2 class="anchored" data-anchor-id="construcción-de-mapas-coropléticos">Construcción de mapas coropléticos</h2>
 <p>Ahora pasemos a la parte más visual del tutorial. Como ya tenemos la geometría de cada entidad y el porcentaje de población en pobreza para varios años dentro de un mismo objeto <code>sf</code>, podemos comenzar construyendo un primer mapa para 2016. La lógica de <code>{ggplot2}</code> en este caso es bastante simple: usaremos <code>geom_sf()</code> para dibujar las entidades federativas y asignaremos la variable <code>pobreza_2016</code> al argumento <code>fill</code>, que controla el color de relleno de cada polígono.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">mapa_2016 <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">mapa_2016 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2426,7 +2428,7 @@ background-color: null;
 font-style: inherit;">"right"</span></span>
 <span id="cb23-19">  )</span>
 <span id="cb23-20"></span>
-<span id="cb23-21">mapa_2016</span></code></pre></div>
+<span id="cb23-21">mapa_2016</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2437,7 +2439,7 @@ font-style: inherit;">"right"</span></span>
 </div>
 <p>El resultado es ya un mapa coroplético funcional: cada estado aparece coloreado según su porcentaje de población en situación de pobreza. Los tonos más claros representan menores niveles de pobreza, mientras que los tonos más intensos corresponden a valores más altos. Una ventaja adicional de haber extraído los datos para más de un año es que podemos repetir este mismo procedimiento para 2018, 2020 o 2022, simplemente cambiando la variable utilizada en <code>fill</code>. Por ejemplo, para mapear 2022 bastaría con reemplazar <code>pobreza_2016</code> por <code>pobreza_2022</code> y cambiar el subtítulo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">mapa_2022 <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">mapa_2022 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2549,7 +2551,7 @@ background-color: null;
 font-style: inherit;">"right"</span></span>
 <span id="cb24-19">  )</span>
 <span id="cb24-20"></span>
-<span id="cb24-21">mapa_2022</span></code></pre></div>
+<span id="cb24-21">mapa_2022</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2561,7 +2563,7 @@ font-style: inherit;">"right"</span></span>
 <p>A bote pronto, con fines de comparación, podríamos poner una imagen al lado de la otra en cualquier documento para sacar conclusiones. Sin embargo, estaríamos cometiendo un error común en la visualización de datos: comparar mapas coropléticos sin una escala de colores común. En el ejemplo anterior, cada mapa tiene su propia escala de colores, lo que puede llevar a interpretaciones erróneas. Por ejemplo, un estado que tenga el mismo porcentaje de población en situación de pobreza en ambos años podría aparecer con un color diferente si las escalas no son idénticas (los valores mínimos y máximos cambian), lo que podría hacer pensar que hubo un cambio cuando en realidad no lo hubo. Para evitar esto, es fundamental establecer una escala de colores común para todos los mapas que se quieran comparar.</p>
 <p>Para resolver este problema, primero debemos calcular un rango común de valores que abarque todos los años que queremos comparar. De esta manera, cada color representará exactamente el mismo nivel de pobreza en todos los mapas.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">limites_pobreza <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">limites_pobreza <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2589,14 +2591,14 @@ background-color: null;
 font-style: inherit;">TRUE</span></span>
 <span id="cb25-9">)</span>
 <span id="cb25-10"></span>
-<span id="cb25-11">limites_pobreza</span></code></pre></div>
+<span id="cb25-11">limites_pobreza</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 13.32903 77.99502</code></pre>
 </div>
 </div>
 <p>En lugar de construir cada mapa por separado y luego intentar acomodarlos manualmente, una alternativa más elegante consiste en reorganizar la base de datos a un formato largo. Así, cada observación conservará su geometría, pero además tendrá una nueva variable que indique el año correspondiente. Esto nos permitirá utilizar <code>facet_wrap()</code> para generar los cuatro mapas dentro de una sola figura. Para esto, usaremos la función <code>pivot_longer()</code> del paquete <code>{tidyr}</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">mapa_pobreza_largo <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">mapa_pobreza_largo <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mapa_pobreza <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2670,11 +2672,11 @@ background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb27-15">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">st_as_sf</span>()</span></code></pre></div>
+font-style: inherit;">st_as_sf</span>()</span></code></pre></div></div>
 </div>
 <p>Con esta nueva base ya podemos construir una sola imagen con los cuatro mapas en una disposición de 2 por 2: en la primera fila aparecerán 2016 y 2018, y en la segunda 2020 y 2022.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">mapa_comparativo <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">mapa_comparativo <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2821,7 +2823,7 @@ background-color: null;
 font-style: inherit;">"bottom"</span></span>
 <span id="cb28-22">  )</span>
 <span id="cb28-23"></span>
-<span id="cb28-24">mapa_comparativo</span></code></pre></div>
+<span id="cb28-24">mapa_comparativo</span></code></pre></div></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2832,7 +2834,7 @@ font-style: inherit;">"bottom"</span></span>
 </div>
 <p>El resultado es una sola figura comparativa con una escala de colores común, una sola leyenda y un encabezado compartido. De esta manera, cualquier diferencia visual entre los paneles refleja cambios reales en la pobreza y no simples variaciones en la escala de color. Finalmente, para guardar la visualización como archivo de imagen utilizaremos la función <code>ggsave()</code>, que permite exportar objetos creados con <code>{ggplot2}</code> en distintos formatos:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -2857,11 +2859,11 @@ font-style: inherit;">300</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">bg =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"white"</span>)</span></code></pre></div>
+font-style: inherit;">"white"</span>)</span></code></pre></div></div>
 </div>
 <p>Si preferimos guardarla como JPG, basta con cambiar la extensión del archivo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -2886,7 +2888,7 @@ font-style: inherit;">300</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">bg =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"white"</span>)</span></code></pre></div>
+font-style: inherit;">"white"</span>)</span></code></pre></div></div>
 </div>
 <p>En ambos casos, <code>width</code> y <code>height</code> controlan el tamaño de la imagen, mientras que <code>dpi</code> determina su resolución. Un valor de 300 en este último campo suele ser suficiente para obtener una imagen de buena calidad tanto en pantalla como en impresión.</p>
 </section>
@@ -3115,7 +3117,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <h2 class="anchored" data-anchor-id="preparación-del-entorno-en-r">Preparación del Entorno en R</h2>
 <p>Para comenzar nuestra exploración de los Autómatas Celulares de Wolfram en R, primero necesitamos configurar nuestro entorno de trabajo cargando algunas bibliotecas esenciales. Estas bibliotecas nos ayudarán en la manipulación de datos y en la visualización gráfica de los resultados.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Instalalas si aún no las tienes utilizando:</span></span>
 <span id="cb1-2"><span class="co" style="color: #5E5E5E;
@@ -3136,7 +3138,7 @@ font-style: inherit;"># para la creación de gráficos</span></span>
 background-color: null;
 font-style: inherit;">library</span>(ggview) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># para visualizar los gráficos en el Viewer sin guardarlos</span></span></code></pre></div>
+font-style: inherit;"># para visualizar los gráficos en el Viewer sin guardarlos</span></span></code></pre></div></div>
 </div>
 </section>
 <section id="definición-de-la-función-para-reglas-binarias" class="level2">
@@ -3145,10 +3147,11 @@ font-style: inherit;"># para visualizar los gráficos en el Viewer sin guardarlo
 <p>Cada combinación de estos tres estados (el propio y los de sus dos vecinos) puede ser representada como un número binario de 3 dígitos, y para cada combinación posible, la regla del autómata define si la célula estará activa o inactiva en la siguiente generación. Dado que hay <img src="https://latex.codecogs.com/png.latex?2%5E%7B3%7D%20=%208"> combinaciones posibles, una regla de autómata celular se puede representar como una secuencia de 8 bits, donde cada bit indica el estado resultante para una combinación específica de vecinos. Por lo tanto, hay un total de <img src="https://latex.codecogs.com/png.latex?2%5E%7B8%7D%20=%20256"> reglas posibles, numeradas del 0 al 255.</p>
 <p>La función <code>getBinaryRule</code> que definiremos a continuación, toma un número entre 0 y 255 y lo convierte en su versión binaria de 8 bits. Aquí nos estamos aprovechando de que los números del 0 al 255 se representan en binario con 8 dígitos y a partir del 256 con 9 o más. Esto nos permitirá aplicar fácilmente la regla elegida a nuestro autómata:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">getBinaryRule <span class="ot" style="color: #003B4F;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">getBinaryRule <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(ruleNumber) {</span>
 <span id="cb2-2">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -3177,7 +3180,7 @@ font-style: inherit;">rev</span>(ruleBinary))</span>
 <span id="cb2-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">return</span>(ruleBinary)</span>
-<span id="cb2-7">}</span></code></pre></div>
+<span id="cb2-7">}</span></code></pre></div></div>
 </div>
 <p>Tras definir la función <code>getBinaryRule</code>, nuestro siguiente paso es establecer el escenario para la simulación de nuestro ACW. Esto implica inicializar las reglas que determinarán el comportamiento de las células y preparar la población inicial en nuestro modelo.</p>
 </section>
@@ -3185,7 +3188,7 @@ font-style: inherit;">return</span>(ruleBinary)</span>
 <h2 class="anchored" data-anchor-id="inicialización-de-las-reglas-y-las-células">Inicialización de las Reglas y las Células</h2>
 <p>Comenzaremos eligiendo una regla específica para nuestro autómata. Recordemos que las reglas varían de 0 a 255, cada una produciendo patrones interesantes. Para este ejemplo, utilizaremos la regla 135:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Selecciona la regla número 135:</span></span>
 <span id="cb3-2">ruleNumber <span class="ot" style="color: #003B4F;
@@ -3225,14 +3228,14 @@ font-style: inherit;">matrix</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">nrow =</span> generations, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">ncol =</span> numCells)</span></code></pre></div>
+font-style: inherit;">ncol =</span> numCells)</span></code></pre></div></div>
 </div>
 </section>
 <section id="configuración-de-la-población-inicial" class="level2">
 <h2 class="anchored" data-anchor-id="configuración-de-la-población-inicial">Configuración de la Población Inicial</h2>
 <p>Ahora, definiremos la población inicial de células. Para simplificar y visualizar claramente el efecto de la regla seleccionada, iniciaremos con una única célula activa en el centro de nuestra cuadrícula:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Inicializa todas las células en estado inactivo (0):</span></span>
 <span id="cb4-2">cells <span class="ot" style="color: #003B4F;
@@ -3263,7 +3266,7 @@ font-style: inherit;"># Establece la configuración previa como la primera gener
 background-color: null;
 font-style: inherit;">1</span>, ] <span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">&lt;-</span> cells</span></code></pre></div>
+font-style: inherit;">&lt;-</span> cells</span></code></pre></div></div>
 </div>
 <p>Así, estamos en posición de simular cómo estas células evolucionarán a lo largo de las generaciones bajo la regla seleccionada. Este es el núcleo de los ACW, donde las simples reglas locales conducen a patrones complejos y a menudo sorprendentes a lo largo del tiempo.</p>
 </section>
@@ -3271,13 +3274,15 @@ font-style: inherit;">&lt;-</span> cells</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="aplicación-de-las-reglas-para-dar-paso-a-nuevas-generaciones">Aplicación de las Reglas para Dar Paso a Nuevas Generaciones</h2>
 <p>Para observar la evolución de nuestro autómata celular, aplicaremos las reglas definidas en cada célula y en cada generación. Recordemos que las reglas consideran el estado de una célula y sus vecinas inmediatas (izquierda y derecha) para determinar su nuevo estado. Este proceso se repite para cada célula en cada nueva generación:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Bucle a través de cada generación, empezando por la segunda:</span></span>
 <span id="cb5-2"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (gen <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
@@ -3288,8 +3293,10 @@ background-color: null;
 font-style: inherit;"># Bucle a través de cada célula en la generación:</span></span>
 <span id="cb5-4">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -3385,7 +3392,7 @@ font-style: inherit;">8</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span> neighborhood]</span>
 <span id="cb5-20">  }</span>
-<span id="cb5-21">}</span></code></pre></div>
+<span id="cb5-21">}</span></code></pre></div></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
@@ -3393,7 +3400,7 @@ font-style: inherit;">-</span> neighborhood]</span>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -3412,7 +3419,7 @@ Nota
 <h2 class="anchored" data-anchor-id="visualización-de-la-evolución-de-las-células">Visualización de la Evolución de las Células</h2>
 <p>Para visualizar la evolución de nuestro ACW, primero necesitamos transformar nuestros datos de la matriz <code>grid</code> en un formato adecuado para <code>{ggplot2}</code>. Lo hacemos creando un <em>data frame</em> que represente cada célula y su estado en cada generación:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Crea un data frame con todas las combinaciones de células y generaciones:</span></span>
 <span id="cb6-2">df <span class="ot" style="color: #003B4F;
@@ -3474,11 +3481,11 @@ font-style: inherit;">$</span>y <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">1</span></span></code></pre></div>
+font-style: inherit;">1</span></span></code></pre></div></div>
 </div>
 <p>Ahora que tenemos nuestros datos en el formato correcto, podemos proceder a visualizarlos utilizando <code>{ggplot2}</code>. Esta herramienta nos permite crear una representación gráfica clara y atractiva de cómo cambian las células a lo largo del tiempo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Crea un gráfico con ggplot2:</span></span>
 <span id="cb7-2">plot_acw <span class="ot" style="color: #003B4F;
@@ -3584,7 +3591,7 @@ background-color: null;
 font-style: inherit;"># Guarda el gráfico como un archivo PNG:</span></span>
 <span id="cb7-17"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">#ggsave("acw_135.png", width=10, height = 10, dpi = 1000, units = "in")</span></span></code></pre></div>
+font-style: inherit;">#ggsave("acw_135.png", width=10, height = 10, dpi = 1000, units = "in")</span></span></code></pre></div></div>
 </div>
 <p>El resultado de todo lo anterior es una visualización de la evolución de nuestro ACW bajo la regla 135:</p>
 <p><a href="acw_135.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="https://alejandroromerog.github.io/blog/ACW/acw_135.png" class="img-fluid"></a></p>
@@ -3635,7 +3642,7 @@ font-style: inherit;">#ggsave("acw_135.png", width=10, height = 10, dpi = 1000, 
 
 
 <p>Primero, necesitamos instalar y cargar los paquetes necesarios:</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">install.packages</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -3653,9 +3660,9 @@ background-color: null;
 font-style: inherit;">library</span>(pagedown)</span>
 <span id="cb1-3"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">library</span>(xaringan)</span></code></pre></div>
+font-style: inherit;">library</span>(xaringan)</span></code></pre></div></div>
 <p>Ahora, para generar nuestra primer presentación, pondremos la siguiente estructura en un archivo .Rmd vacío:</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb2-2">title<span class="sc" style="color: #5E5E5E;
@@ -3705,19 +3712,19 @@ background-color: null;
 font-style: inherit;">:</span> true</span>
 <span id="cb2-13"><span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">---</span></span></code></pre></div>
+font-style: inherit;">---</span></span></code></pre></div></div>
 <p>Al guardar dicho archivo y después darle clic a <em>Knit</em>, RStudio compilará un html con el siguiente contenido:</p>
 <p><a href="uno.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="https://alejandroromerog.github.io/blog/xaringan/uno.png" class="img-fluid"></a></p>
 <p>Podrás ver que la presentación está un poco fea. Para darle un mejor estilo podemos <a href="https://cran.r-project.org/web/packages/xaringanthemer/vignettes/xaringanthemer.html">crear nuestro propio tema</a> o utilizar los temas precargados. Estos últimos podemos visualizarlos escribiendo lo siguiente en la consola:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(xaringan<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:::</span><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list_css</span>())</span></code></pre></div>
+font-style: inherit;">list_css</span>())</span></code></pre></div></div>
 <p>Yo escogeré la fuente “tamu-fonts” y el tema “shinobi”. Se aplican en el .Rmd de la siguiente manera:</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb4-2">title<span class="sc" style="color: #5E5E5E;
@@ -3771,7 +3778,7 @@ background-color: null;
 font-style: inherit;">:</span> true</span>
 <span id="cb4-13"><span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">---</span></span></code></pre></div>
+font-style: inherit;">---</span></span></code></pre></div></div>
 <p>Guardamos y compilamos de nuevo. El <strong><em>output</em></strong> ahora es este:</p>
 <p><a href="dos.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="https://alejandroromerog.github.io/blog/xaringan/dos.png" class="img-fluid"></a></p>
 <p>Ya se ve mejor. Sin embargo, está algo tedioso que una ventana adicional aparezca para poder visualizar la presentación. Es por ello que existe <em>Infinite Moon Reader</em>: éste <em>addin</em> nos permitirá visualizar la presentación en el <em>viewer</em> que está integrado a RStudio (como cuando visualizamos gráficas de <code>{ggplot2}</code>). Para activarlo solo es necesario darle clic al botón <em>Addins</em> que se encuentra en la parte superior de RStudio, buscar <em>Infinite Moon Reader</em> y oprimir clic de nuevo (si saltan avisos de que necesitamos instalar o actualizar algunos paquetes, les damos aceptar). Con esto, ya podremos visualizar la presentación desde Rstudio actualizándose en tiempo real (la mayor parte de las veces).</p>
@@ -3781,22 +3788,22 @@ font-style: inherit;">---</span></span></code></pre></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Si <em>Infinite Moon Reader</em> no aparece en <em>Addins</em>, reinstalen el paquete <code>{xaringan}</code>, pero ahora desde la repo oficial en Github:</p>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">remotes<span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">remotes<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"yihui/xaringan"</span>)</span></code></pre></div>
+font-style: inherit;">"yihui/xaringan"</span>)</span></code></pre></div></div>
 </div>
 </div>
 <p>Para crear nuevas diapositivas simplemente tenemos que escribir debajo del área donde definimos el título, subtítulo, etc., e ir separando diapositiva por diapositiva con tres guiones. Ejemplo:</p>
-<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb6-2">title<span class="sc" style="color: #5E5E5E;
@@ -3892,11 +3899,14 @@ font-style: inherit;"># Mi segunda diapositiva</span></span>
 <span id="cb6-30"></span>
 <span id="cb6-31">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> reprehenderit <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">in</span> culpa qui officia deserunt mollit anim id est laborum.</span></code></pre></div>
+font-weight: bold;
+font-style: inherit;">in</span> culpa qui officia deserunt mollit anim id est laborum.</span></code></pre></div></div>
 <p><strong><em>Output</em></strong>:</p>
 <div style="display: flex; justify-content: center; align-items: center;">
     <img src="https://alejandroromerog.github.io/blog/xaringan/tres.png" style="max-width: 55%; height: auto; padding: 0px;">
@@ -3908,7 +3918,7 @@ font-style: inherit;">in</span> culpa qui officia deserunt mollit anim id est la
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -3916,7 +3926,7 @@ Nota
 </div>
 </div>
 <p>Para poner links a una página web dentro de una diapositiva podemos hacerlo de tres maneras:</p>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb7-2"></span>
@@ -3987,11 +3997,11 @@ font-style: inherit;">&lt;</span><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">/</span>a<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div>
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
 <p><strong><em>Output</em></strong>:</p>
 <p><a href="cinco.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="https://alejandroromerog.github.io/blog/xaringan/cinco.png" class="img-fluid"></a></p>
 <p>Si queremos insertar código y gráficas de R simplemente tenemos que insertar un nuevo code chunk y escribir nuestras instrucciones:</p>
-<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb8-2"></span>
@@ -4024,14 +4034,14 @@ font-style: inherit;">    ggtitle("Fuel efficiency!")</span></span>
 background-color: null;
 font-style: inherit;">\</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">```</span></span></code></pre></div>
+font-style: inherit;">```</span></span></code></pre></div></div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -4041,7 +4051,7 @@ Nota
 <p><strong><em>Output</em></strong>:</p>
 <p><a href="seis.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="https://alejandroromerog.github.io/blog/xaringan/seis.png" class="img-fluid"></a></p>
 <p>También podemos insertar imágenes (incluso pueden ser <em>gifs</em>) de dos maneras, estilo RMarkdown o estilo HTML:</p>
-<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb9-2"></span>
@@ -4113,7 +4123,7 @@ font-style: inherit;">&lt;</span><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">/</span>div<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div>
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
 <p><strong><em>Output</em></strong>:</p>
 <div style="display: flex; justify-content: center; align-items: center;">
     <img src="https://alejandroromerog.github.io/blog/xaringan/siete.png" style="max-width: 55%; height: auto; padding: 0px;">
@@ -4125,7 +4135,7 @@ font-style: inherit;">&gt;</span></span></code></pre></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Nota
+<span class="screen-reader-only">Tip</span>Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -4133,7 +4143,7 @@ Nota
 </div>
 </div>
 <p>La imagen que inserté anteriormente estaba guardada en la memoria de mi computadora. Sin embargo, también podemos introducir imágenes que se encuentren en internet:</p>
-<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb10-2"></span>
@@ -4189,11 +4199,11 @@ font-style: inherit;">&lt;</span><span class="er" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">/</span>div<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">&gt;</span></span></code></pre></div>
+font-style: inherit;">&gt;</span></span></code></pre></div></div>
 <p><strong><em>Output</em></strong>:</p>
 <p><a href="nueve.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="https://alejandroromerog.github.io/blog/xaringan/nueve.png" class="img-fluid"></a></p>
 <p>También podemos dividir cada diapositiva en dos partes e insertar ecuaciones LaTeX de la siguiente manera:</p>
-<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="sc" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">---</span></span>
 <span id="cb11-2"></span>
@@ -4317,7 +4327,7 @@ font-style: inherit;">8</span>\pi kGM}<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span><span class="er" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">$</span></span></code></pre></div>
+font-style: inherit;">$</span></span></code></pre></div></div>
 <p><strong><em>Output</em></strong>:</p>
 <p><a href="diez.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="https://alejandroromerog.github.io/blog/xaringan/diez.png" class="img-fluid"></a></p>
 <p><strong><em>¡Fin!</em></strong></p>
@@ -4328,7 +4338,7 @@ font-style: inherit;">$</span></span></code></pre></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Notas adicionales
+<span class="screen-reader-only">Tip</span>Notas adicionales
 </div>
 </div>
 <div class="callout-body-container callout-body">

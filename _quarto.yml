@@ -8,6 +8,8 @@ project:
   preview:
     port: 7779
 
+quarto-required: "1.9.38"
+
 website:
   title: "ARG"
   site-url: "https://alejandroromerog.github.io"
