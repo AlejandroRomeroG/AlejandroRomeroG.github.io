@@ -212,6 +212,32 @@ footer.footer .nav-footer a:focus,
   color: #744682 !important;
 }
 
+@media (max-width: 767.98px) {
+  footer.footer .nav-footer {
+    column-gap: 1rem;
+    flex-wrap: nowrap;
+  }
+
+  footer.footer .nav-footer-center {
+    display: none;
+  }
+
+  footer.footer .nav-footer-left,
+  footer.footer .nav-footer-right {
+    flex: 1 1 0;
+    margin-bottom: 0;
+    min-width: 0;
+  }
+
+  footer.footer .nav-footer-left {
+    text-align: left;
+  }
+
+  footer.footer .nav-footer-right {
+    text-align: right;
+  }
+}
+
 html:not([data-theme="dark"]) .aa-DetachedOverlay li.aa-Item[aria-selected="true"] .search-item,
 html:not([data-theme="dark"]) #quarto-search-results li.aa-Item[aria-selected="true"] .search-item {
   background-color: rgba(145, 88, 162, 0.14) !important;
